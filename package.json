@@ -2,8 +2,8 @@
   "name": "closer",
   "version": "1.0.0",
   "engines": {
-    "node": ">= 18.15.0",
-    "pnpm": ">= 8.6.3"
+    "node": ">=18.15.0",
+    "pnpm": ">=8.6.3"
   },
   "scripts": {
     "ng": "ng",
@@ -13,7 +13,7 @@
     "lint": "eslint src/** --ext .ts --max-warnings=0 --fix",
     "prettier:write": "prettier --write '**/*.(js|ts)'",
     "prettier:check": "prettier --check '**/*.(js|ts)'",
-    "postinstall": "if [ $HUSKY -ne 0 ]; then husky install; fi"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@angular/animations": "^16.1.0",
@@ -47,7 +47,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
