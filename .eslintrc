@@ -32,7 +32,8 @@
         "no-return-await": "error",
         "simple-import-sort/imports": "warn",
         "simple-import-sort/exports": "warn",
-        "no-console": "warn"
+        "no-console": "warn",
+        "no-unused-vars": "warn"
       }
     },
     {
