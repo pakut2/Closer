@@ -1,4 +1,71 @@
-@import "shared";
+@use "@angular/material" as mat;
+@import "animations";
+@import "variables";
+@include mat.core;
+
+$material-primary: (
+  50: #f6f6f6,
+  100: #ebebeb,
+  200: #ddd,
+  300: #c8c8c8,
+  400: #a3a3a3,
+  500: #818181,
+  600: #5a5a5a,
+  700: #484848,
+  800: #2b2b2b,
+  900: #080808,
+  contrast: (
+    50: $light-color,
+    100: $light-color,
+    200: $light-color,
+    300: $light-color,
+    400: $light-color,
+    500: $light-color,
+    600: $light-color,
+    700: $light-color,
+    800: $light-color,
+    900: $light-color
+  )
+);
+
+$material-accent: (
+  50: #ffebee,
+  100: #ffcdd3,
+  200: #ef9b9b,
+  300: #e67474,
+  400: #f05452,
+  500: $accent-color,
+  600: #e63b37,
+  700: #d43131,
+  800: #c72a2a,
+  900: #b81e1e,
+  contrast: (
+    50: $dark-color,
+    100: $dark-color,
+    200: $dark-color,
+    300: $dark-color,
+    400: $dark-color,
+    500: $dark-color,
+    600: $dark-color,
+    700: $dark-color,
+    800: $dark-color,
+    900: $dark-color
+  )
+);
+
+$material-accent-palette: mat.define-palette($material-accent);
+
+$material-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: mat.define-palette($material-primary),
+      accent: $material-accent-palette,
+      warn: $material-accent-palette
+    )
+  )
+);
+
+@include mat.all-component-themes($material-theme);
 
 * {
   box-sizing: border-box;
@@ -7,10 +74,32 @@
   outline: none;
 }
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-weight: 500;
-  font-family: sans-serif;
-  min-height: 100vh;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   background: radial-gradient(#525252, #131313);
   color: $light-color;
+}
+
+.text {
+  color: $light-color;
+  font-size: $text-size;
+  text-align: center;
+}
+
+.button {
+  cursor: pointer;
+
+  &:hover {
+    color: $accent-color;
+  }
+}
+
+.blinker {
+  @include animate(blinker, 1s, linear, infinite);
 }

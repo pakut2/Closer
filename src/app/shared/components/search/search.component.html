@@ -1,0 +1,30 @@
+<section>
+  <form [formGroup]="stopSearchForm" (ngSubmit)="addStopByName(stopSearchForm.value)">
+    <input
+      #stopNameInput
+      type="text"
+      placeholder="Stop Name:"
+      formControlName="stopName"
+      [matAutocomplete]="auto"
+    />
+  </form>
+
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    hideSingleSelectionIndicator="true"
+    (optionSelected)="$event.option.deselect()"
+  >
+    <mat-option
+      *ngFor="let stopName of autocompleteStopNames$ | async; trackBy: trackAutocomplete"
+      [value]="stopName"
+    >
+      {{ stopName }}
+    </mat-option>
+  </mat-autocomplete>
+
+  <div class="form-overlay" [ngClass]="stopNameInputActive ? 'form-visible' : 'form-hidden'"></div>
+  <div tabindex="0" class="button icon-container" (click)="toggleFormVisibility()">
+    <mat-icon fontIcon="search" />
+    <span>Search</span>
+  </div>
+</section>

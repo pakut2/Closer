@@ -30,15 +30,22 @@
           }
         ],
         "no-return-await": "error",
+        "@typescript-eslint/no-unused-vars": "error",
         "simple-import-sort/imports": "warn",
         "simple-import-sort/exports": "warn",
         "no-console": "warn",
-        "no-unused-vars": "warn"
+        "prettier/prettier": "warn"
       }
     },
     {
       "files": ["*.html"],
-      "extends": ["plugin:@angular-eslint/template/recommended", "plugin:@angular-eslint/template/accessibility"]
+      "extends": [
+        "plugin:@angular-eslint/template/recommended",
+        "plugin:@angular-eslint/template/accessibility"
+      ],
+      "rules": {
+        "@angular-eslint/template/click-events-have-key-events": "off"
+      }
     }
   ]
 }

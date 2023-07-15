@@ -1,0 +1,17 @@
+<section>
+  <ng-container *ngIf="stops$ | async as stops; else loader">
+    <ng-container *ngIf="stops.length; else noStops">
+      <ng-container *ngFor="let stop of stops; trackBy: trackStops">
+        <app-stop-card
+          [stop]="stop"
+          (update)="scheduleService.changeStopSchedule(stop, $event)"
+          (remove)="scheduleService.removeStopByName(stop.name)"
+        />
+      </ng-container>
+    </ng-container>
+
+    <ng-template #noStops><p class="text">There was a stop here. It's gone now.</p></ng-template>
+  </ng-container>
+
+  <ng-template #loader><mat-spinner color="accent" diameter="50" /></ng-template>
+</section>

@@ -20,7 +20,11 @@
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"],
     "paths": {
-      "@shared/*": ["./src/app/shared/*"]
+      "@core": ["./src/app/core/index.ts"],
+      "@constants": ["./src/app/shared/constants.ts"],
+      "@types": ["./src/app/shared/types/index.ts"],
+      "@utilities": ["./src/app/shared/utilities/index.ts"],
+      "@ztm": ["./src/app/core/api/ztm/index.ts"]
     }
   },
   "angularCompilerOptions": {

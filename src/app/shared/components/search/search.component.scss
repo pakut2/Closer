@@ -1,0 +1,53 @@
+@import "variables";
+
+section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  input {
+    width: 10rem;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid $light-color;
+    color: $light-color;
+    font-size: $text-size;
+    padding: 0.3rem 0.5rem;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      border-bottom: 1px solid $accent-color;
+    }
+  }
+}
+
+.form-overlay {
+  position: absolute;
+  background: $dark-color;
+  width: 15rem;
+  height: 2rem;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.form-visible {
+  transform: translateX(-15rem);
+}
+
+.form-hidden {
+  transform: translateX(0);
+}
+
+.icon-container {
+  margin-top: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.6rem;
+  z-index: 2;
+
+  mat-icon {
+    transform: scale(0.9);
+  }
+}

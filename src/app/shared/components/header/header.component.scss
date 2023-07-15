@@ -1,4 +1,4 @@
-@import "shared";
+@import "variables";
 
 header {
   background: $dark-color;
@@ -12,5 +12,6 @@ header {
     text-transform: uppercase;
     letter-spacing: 0.3rem;
     font-size: 1.2rem;
+    z-index: 2;
   }
 }

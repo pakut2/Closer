@@ -1,0 +1,9 @@
+@mixin animate($name, $duration, $timing, $count) {
+  animation: $name $duration $timing $count;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
