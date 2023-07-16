@@ -1,4 +1,4 @@
-@import "../../../styles/variables";
+@import "variables";
 
 section {
   display: flex;
@@ -28,7 +28,7 @@ section {
   width: 15rem;
   height: 2rem;
   transition: all 0.3s ease;
-  z-index: 1;
+  z-index: $marginal-z-index;
 }
 
 .form-visible {
@@ -37,17 +37,4 @@ section {
 
 .form-hidden {
   transform: translateX(0);
-}
-
-.icon-container {
-  margin-top: 0.3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.6rem;
-  z-index: 2;
-
-  mat-icon {
-    transform: scale(0.9);
-  }
 }

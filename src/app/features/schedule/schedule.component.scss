@@ -5,4 +5,5 @@ section {
   flex-direction: column;
   align-items: center;
   margin-top: calc($header-height + 2rem);
+  margin-bottom: calc($footer-height + 1rem);
 }

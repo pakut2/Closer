@@ -4,10 +4,10 @@ header {
   position: fixed;
   top: 0;
   width: 100vw;
-  z-index: 1;
+  min-height: $header-height;
+  z-index: $marginal-z-index;
   background: $dark-color;
   font-family: Montserrat, sans-serif;
-  min-height: $header-height;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -16,6 +16,6 @@ header {
     text-transform: uppercase;
     letter-spacing: 0.3rem;
     font-size: 1.2rem;
-    z-index: 2;
+    z-index: $marginal-content-z-index;
   }
 }

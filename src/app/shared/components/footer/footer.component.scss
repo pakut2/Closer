@@ -1,0 +1,18 @@
+@import "variables";
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  min-height: $footer-height;
+  z-index: $marginal-z-index;
+  background: $dark-color;
+  font-family: Montserrat, sans-serif;
+
+  nav {
+    display: grid;
+    grid-template-columns: repeat(2, 7rem);
+    justify-content: center;
+    align-items: center;
+  }
+}

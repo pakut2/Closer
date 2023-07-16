@@ -23,6 +23,7 @@
     "paths": {
       "@core": ["./src/app/core/index.ts"],
       "@constants": ["./src/app/shared/constants.ts"],
+      "@features": ["./src/app/features/index.ts"],
       "@types": ["./src/app/shared/types/index.ts"],
       "@utilities": ["./src/app/shared/utilities/index.ts"],
       "@ztm": ["./src/app/core/api/ztm/index.ts"]
