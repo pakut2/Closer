@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">closer</string>
+    <string name="title_activity_main">closer</string>
+    <string name="package_name">pakut2.loseyourip.com</string>
+    <string name="custom_url_scheme">pakut2.loseyourip.com</string>
+</resources>

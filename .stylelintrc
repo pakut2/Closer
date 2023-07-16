@@ -1,6 +1,7 @@
 {
   "extends": "stylelint-config-standard-scss",
   "rules": {
+    "media-feature-range-notation": null,
     "scss/dollar-variable-empty-line-before": null
   }
 }

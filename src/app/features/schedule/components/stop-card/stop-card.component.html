@@ -2,7 +2,14 @@
   <div class="card-header">
     <span>
       {{ stop.name }}
-      <span class="button" [matMenuTriggerFor]="relatedStopsMenu">{{ stop.ordinalNumber }}</span>
+      <span
+        #menuTrigger="matMenuTrigger"
+        class="button"
+        [class.text-accent-color]="menuTrigger.menuOpen"
+        [matMenuTriggerFor]="relatedStopsMenu"
+      >
+        {{ stop.ordinalNumber }}
+      </span>
     </span>
     <mat-icon fontIcon="close" class="button" (click)="removeAnimationActive = true" />
 

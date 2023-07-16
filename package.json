@@ -6,15 +6,17 @@
     "pnpm": ">=8.6.3"
   },
   "scripts": {
+    "prepare": "husky install",
     "ng": "ng",
     "start": "ng serve",
+    "start:capacitor": "pnpm build && npx cap sync && pnpm start --host=0.0.0.0 --disable-host-check",
+    "android:open": "npx cap open android",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "eslint": "eslint \"src/**\" --max-warnings=0 --fix",
     "stylelint": "stylelint \"src/**/*.scss\"",
     "prettier:write": "prettier --write \"**/*.(html|scss|ts)\"",
-    "prettier:check": "prettier --check \"**/*.(html|scss|ts)\"",
-    "prepare": "husky install"
+    "prettier:check": "prettier --check \"**/*.(html|scss|ts)\""
   },
   "dependencies": {
     "@angular/animations": "^16.1.0",
@@ -27,6 +29,9 @@
     "@angular/platform-browser": "^16.1.0",
     "@angular/platform-browser-dynamic": "^16.1.0",
     "@angular/router": "^16.1.0",
+    "@capacitor/android": "^5.2.1",
+    "@capacitor/angular": "2.0.3",
+    "@capacitor/core": "latest",
     "latinize": "^0.5.0",
     "luxon": "^3.3.0",
     "rxjs": "~7.8.0",
@@ -42,10 +47,12 @@
     "@angular-eslint/template-parser": "16.0.3",
     "@angular/cli": "~16.1.0",
     "@angular/compiler-cli": "^16.1.0",
+    "@capacitor/cli": "latest",
     "@total-typescript/ts-reset": "^0.4.2",
     "@types/jasmine": "~4.3.0",
     "@types/latinize": "^0.2.15",
     "@types/luxon": "^3.3.0",
+    "@types/node": "^20.4.2",
     "@typescript-eslint/eslint-plugin": "5.59.7",
     "@typescript-eslint/parser": "5.59.7",
     "eslint": "^8.40.0",

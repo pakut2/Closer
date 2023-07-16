@@ -23,7 +23,12 @@
   </mat-autocomplete>
 
   <div class="form-overlay" [ngClass]="stopNameInputActive ? 'form-visible' : 'form-hidden'"></div>
-  <div tabindex="0" class="button icon-container" (click)="toggleFormVisibility()">
+  <div
+    tabindex="0"
+    class="button icon-container"
+    [class.text-accent-color]="stopNameInputActive"
+    (click)="toggleFormVisibility()"
+  >
     <mat-icon fontIcon="search" />
     <span>Search</span>
   </div>

@@ -94,10 +94,10 @@ body {
 
 .button {
   cursor: pointer;
+}
 
-  &:hover {
-    color: $accent-color;
-  }
+.text-accent-color {
+  color: $accent-color;
 }
 
 .blinker {
