@@ -1,4 +1,4 @@
-import { Coords } from "./coords.interface";
+import { Coords } from "./coords";
 
 export interface Stop {
   id: string;

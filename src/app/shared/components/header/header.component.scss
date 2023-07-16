@@ -1,9 +1,13 @@
 @import "variables";
 
 header {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 1;
   background: $dark-color;
   font-family: Montserrat, sans-serif;
-  min-height: 8vh;
+  min-height: $header-height;
   display: flex;
   justify-content: space-around;
   align-items: center;

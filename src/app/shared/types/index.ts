@@ -1,3 +1,3 @@
-export * from "./coords.interface";
-export * from "./message.type";
-export * from "./stop.interface";
+export * from "./coords";
+export * from "./message";
+export * from "./stop";

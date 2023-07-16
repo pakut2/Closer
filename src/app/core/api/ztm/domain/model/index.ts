@@ -1,2 +1,2 @@
-export * from "./ztm-schedule.interface";
-export * from "./ztm-stop.interface";
+export * from "./ztm-schedule";
+export * from "./ztm-stop";

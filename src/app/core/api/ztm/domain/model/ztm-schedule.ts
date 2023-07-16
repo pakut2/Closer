@@ -1,4 +1,4 @@
-import { ZtmStopWithRelatedStops } from "./ztm-stop.interface";
+import { ZtmStopWithRelatedStops } from "./ztm-stop";
 
 export interface ZtmStopWithSchedules extends ZtmSchedulesResponse {
   stop: ZtmStopWithRelatedStops;

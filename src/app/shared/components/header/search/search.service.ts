@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
+import { removeDiacritics } from "@utilities";
 import { ZtmAdapter } from "@ztm";
-import * as latinize from "latinize";
 import { concatMap, map, Observable, startWith } from "rxjs";
 
 @Injectable()
@@ -23,10 +23,10 @@ export class SearchService {
   }
 
   private filterMatchingStopNames(inputStopName: string, stopNames: string[]): string[] {
-    const stopNameWithoutDiacritics = latinize(inputStopName.toLowerCase());
+    const stopNameWithoutDiacritics = removeDiacritics(inputStopName);
 
     return stopNames.filter(stopName =>
-      latinize(stopName.toLowerCase()).includes(stopNameWithoutDiacritics)
+      removeDiacritics(stopName).includes(stopNameWithoutDiacritics)
     );
   }
 }
