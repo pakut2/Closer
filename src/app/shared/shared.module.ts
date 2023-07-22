@@ -3,22 +3,39 @@ import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatIconModule } from "@angular/material/icon";
+import { MatMenuModule } from "@angular/material/menu";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { ZtmModule } from "@ztm";
 
-import { FooterComponent, HeaderComponent, SearchComponent } from "./components";
+import {
+  FooterComponent,
+  HeaderComponent,
+  LabeledMenuComponent,
+  SearchComponent,
+  StopScheduleListComponent
+} from "./components";
 
 @NgModule({
-  declarations: [HeaderComponent, SearchComponent, FooterComponent],
-  exports: [HeaderComponent, FooterComponent],
+  declarations: [
+    HeaderComponent,
+    SearchComponent,
+    FooterComponent,
+    StopScheduleListComponent,
+    LabeledMenuComponent
+  ],
+  exports: [HeaderComponent, FooterComponent, LabeledMenuComponent, StopScheduleListComponent],
   imports: [
     CommonModule,
-    MatIconModule,
     MatAutocompleteModule,
+    MatIconModule,
+    MatMenuModule,
     ReactiveFormsModule,
     ZtmModule,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    MatMenuModule,
+    MatProgressSpinnerModule
   ]
 })
 export class SharedModule {}

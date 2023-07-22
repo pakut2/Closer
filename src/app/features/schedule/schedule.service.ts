@@ -57,21 +57,21 @@ export class ScheduleService {
   }
 
   addStopByName(stopName: string): void {
-    const currentStops = this.stops;
+    const currentStops = this.stops ?? [];
 
     const stopNameWithoutDiacritics = removeDiacritics(stopName);
 
-    if (currentStops?.some(stop => removeDiacritics(stop.name) === stopNameWithoutDiacritics)) {
+    if (currentStops.some(stop => removeDiacritics(stop.name) === stopNameWithoutDiacritics)) {
       // TODO toast
       console.log("duplicate stop");
       return;
     }
 
     this.ztmAdapter
-      .getStopsWithSchedules([{ name: stopName, ordinalNumber: BASE_ORDINAL_NUMBER }])
+      .getStopWithSchedules({ name: stopName, ordinalNumber: BASE_ORDINAL_NUMBER })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([newStop]) => {
-        if (currentStops?.length) {
+      .subscribe(newStop => {
+        if (currentStops.length) {
           this.stops = [...currentStops, newStop];
         } else {
           this.stops = [newStop];
@@ -80,30 +80,29 @@ export class ScheduleService {
   }
 
   changeStopSchedule(existingStop: Stop, ordinalNumber: string): void {
-    const currentStops = this.stops;
+    const currentStops = this.stops ?? [];
 
     if (existingStop.ordinalNumber === ordinalNumber) {
       return;
     }
 
-    if (!currentStops?.some(stop => stop.name === existingStop.name)) {
+    if (!currentStops.some(stop => stop.name === existingStop.name)) {
       // TODO toast
       console.log("stop not found");
       return;
     }
 
     this.ztmAdapter
-      .getStopsWithSchedules([{ name: existingStop.name, ordinalNumber }])
+      .getStopWithSchedules({ name: existingStop.name, ordinalNumber })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([updatedStop]) => {
-        this.stops =
-          currentStops?.map(stop => {
-            if (stop.name !== existingStop.name) {
-              return stop;
-            }
+      .subscribe(updatedStop => {
+        this.stops = currentStops.map(stop => {
+          if (stop.name !== existingStop.name) {
+            return stop;
+          }
 
-            return updatedStop;
-          }) ?? [];
+          return updatedStop;
+        });
       });
   }
 

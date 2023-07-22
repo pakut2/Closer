@@ -1,0 +1,17 @@
+<section>
+  <div class="card-header">
+    <span>
+      {{ stop.name }}
+      <app-labeled-menu
+        [label]="stop.ordinalNumber"
+        [menuItems]="relatedStopOrdinalNumbers"
+        (selected)="changeSchedule.emit($event)"
+      />
+    </span>
+  </div>
+  <div class="card-body">
+    <app-stop-schedule-list [schedules]="stop.schedules" />
+  </div>
+
+  <div class="card-footer">{{ stop.location.distance }} m</div>
+</section>

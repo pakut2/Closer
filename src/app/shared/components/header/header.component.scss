@@ -9,8 +9,16 @@ header {
   background: $dark-color;
   font-family: Montserrat, sans-serif;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+
+  :first-child {
+    margin-left: 1rem;
+  }
+
+  :last-child {
+    margin-right: 1rem;
+  }
 
   h4 {
     text-transform: uppercase;

@@ -1,0 +1,9 @@
+@use "common";
+@use "components/stop-card";
+@import "variables";
+
+.card-footer {
+  background: $dark-color;
+  font-size: 0.8rem;
+  text-align: center;
+}

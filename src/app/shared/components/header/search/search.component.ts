@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
+import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
 import { Observable } from "rxjs";
@@ -19,6 +20,7 @@ interface FormValue {
 })
 export class SearchComponent implements OnInit {
   @ViewChild("stopNameInput") stopNameInput!: ElementRef<HTMLInputElement>;
+  @ViewChild(MatAutocompleteTrigger) autocomplete!: MatAutocompleteTrigger;
 
   readonly stopSearchForm = this.formBuilder.group({ stopName: "" } satisfies FormValue);
   autocompleteStopNames$!: Observable<string[]>;
@@ -42,15 +44,10 @@ export class SearchComponent implements OnInit {
     this.stopNameInputActive = !this.stopNameInputActive;
   }
 
-  trackAutocomplete(index: number, stopName: string): string {
-    return stopName;
-  }
-
   addStopByName({ stopName }: FormValue): void {
-    // TODO submit after choosing from autocomplete
-
+    this.autocomplete.closePanel();
     this.stopSearchForm.reset();
-    this.stopNameInput.nativeElement.blur();
+    setTimeout(() => this.stopNameInput.nativeElement.blur());
 
     if (!stopName) {
       // TODO toast

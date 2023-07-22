@@ -1,9 +1,11 @@
+@use "common";
 @import "variables";
 
 section {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 1rem;
 
   input {
     width: 10rem;

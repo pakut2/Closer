@@ -1,0 +1,26 @@
+<span
+  #menuTrigger="matMenuTrigger"
+  class="button"
+  [class.text-accent-color]="menuTrigger.menuOpen"
+  [matMenuTriggerFor]="relatedStopsMenu"
+>
+  <ng-container *ngIf="icon; else labelOnly">
+    <div tabindex="0" class="button icon-container">
+      <ng-container [ngTemplateOutlet]="icon" />
+      {{ label }}
+    </div>
+  </ng-container>
+
+  <ng-template #labelOnly>{{ label }}</ng-template>
+</span>
+
+<mat-menu #relatedStopsMenu="matMenu">
+  <span
+    *ngFor="let menuItem of menuItems"
+    tabindex="0"
+    mat-menu-item
+    (click)="selected.emit(menuItem)"
+  >
+    {{ menuItem }}
+  </span>
+</mat-menu>

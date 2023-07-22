@@ -33,3 +33,14 @@ interface ZtmStopMetadata {
   stopId: number;
   stopCode: string;
 }
+
+export interface GeolocalizedZtmStopWithRelatedStops extends ZtmStop {
+  distance: number;
+  relatedStops: GeolocalizedZtmStopMetadata[];
+}
+
+export interface GeolocalizedZtmStopMetadata extends ZtmStopMetadata {
+  stopLat: number;
+  stopLon: number;
+  distance: number;
+}

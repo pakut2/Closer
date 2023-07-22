@@ -1,0 +1,17 @@
+<section [class.slide-right]="removeAnimationActive" (transitionend)="remove.emit()">
+  <div class="card-header">
+    <span>
+      {{ stop.name }}
+      <app-labeled-menu
+        [label]="stop.ordinalNumber"
+        [menuItems]="relatedStopOrdinalNumbers"
+        (selected)="changeSchedule.emit($event)"
+      />
+    </span>
+
+    <mat-icon fontIcon="close" class="button" (click)="removeAnimationActive = true" />
+  </div>
+  <div class="card-body">
+    <app-stop-schedule-list [schedules]="stop.schedules" />
+  </div>
+</section>

@@ -6,7 +6,11 @@ export interface Stop {
   ordinalNumber: string;
   relatedStops: StopMetadata[];
   schedules: Schedule[];
-  location: Coords;
+}
+
+export interface GeolocalizedStop extends Stop {
+  relatedStops: GeolocalizedStopMetadata[];
+  location: StopLocation;
 }
 
 export interface Schedule {
@@ -18,6 +22,17 @@ export interface Schedule {
 interface StopMetadata {
   id: string;
   ordinalNumber: string;
+}
+
+interface GeolocalizedStopMetadata {
+  id: string;
+  ordinalNumber: string;
+  location: StopLocation;
+}
+
+interface StopLocation {
+  coords: Coords;
+  distance: number;
 }
 
 export interface StopIdentifier {

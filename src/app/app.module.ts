@@ -5,6 +5,7 @@ import { CoreModule } from "@core";
 
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
+import { NearbyModule } from "./features/nearby/nearby.module";
 import { ScheduleModule } from "./features/schedule/schedule.module";
 import { SharedModule } from "./shared/shared.module";
 
@@ -16,7 +17,8 @@ import { SharedModule } from "./shared/shared.module";
     AppRoutingModule,
     CoreModule,
     SharedModule,
-    ScheduleModule
+    ScheduleModule,
+    NearbyModule
   ],
   bootstrap: [AppComponent]
 })

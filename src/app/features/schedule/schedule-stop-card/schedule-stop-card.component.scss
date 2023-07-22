@@ -1,0 +1,8 @@
+@use "common";
+@use "components/stop-card";
+
+.slide-right {
+  transform: translateX(8rem);
+  opacity: 0;
+  transition: all 0.3s ease;
+}

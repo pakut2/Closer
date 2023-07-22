@@ -1,5 +1,4 @@
 @use "@angular/material" as mat;
-@import "animations";
 @import "variables";
 @include mat.core;
 
@@ -86,33 +85,6 @@ body {
   color: $light-color;
 }
 
-.text {
-  color: $light-color;
-  font-size: $text-size;
-  text-align: center;
-}
-
-.button {
-  cursor: pointer;
-}
-
-.text-accent-color {
-  color: $accent-color;
-}
-
-.icon-container {
-  margin-top: 0.3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 0.6rem;
-  z-index: $marginal-content-z-index;
-
-  mat-icon {
-    transform: scale(0.9);
-  }
-}
-
-.blinker {
-  @include animate(blinker, 1s, linear, infinite);
+main {
+  overflow: auto;
 }

@@ -1,0 +1,23 @@
+<section>
+  <ng-container *ngIf="schedules.length; else noSchedules">
+    <table>
+      <tr>
+        <th>Line</th>
+        <th>Direction</th>
+        <th>Departure</th>
+      </tr>
+
+      <ng-container *ngFor="let schedule of schedules">
+        <tr>
+          <td>{{ schedule.lineNumber }}</td>
+          <td>{{ schedule.destination }}</td>
+          <td [class.blinker]="schedule.departsIn === '>>>'">{{ schedule.departsIn }}</td>
+        </tr>
+      </ng-container>
+    </table>
+  </ng-container>
+
+  <ng-template #noSchedules>
+    <p class="text">There was a schedule here. It's gone now.</p>
+  </ng-template>
+</section>

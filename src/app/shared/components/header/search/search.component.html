@@ -12,12 +12,9 @@
   <mat-autocomplete
     #auto="matAutocomplete"
     hideSingleSelectionIndicator="true"
-    (optionSelected)="$event.option.deselect()"
+    (optionSelected)="$event.option.deselect(); addStopByName(stopSearchForm.value)"
   >
-    <mat-option
-      *ngFor="let stopName of autocompleteStopNames$ | async; trackBy: trackAutocomplete"
-      [value]="stopName"
-    >
+    <mat-option *ngFor="let stopName of autocompleteStopNames$ | async" [value]="stopName">
       {{ stopName }}
     </mat-option>
   </mat-autocomplete>

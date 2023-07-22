@@ -1,9 +1,14 @@
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
-import { ScheduleComponent } from "@features";
+import { NearbyComponent, ScheduleComponent } from "@features";
 
 @NgModule({
-  imports: [RouterModule.forRoot([{ path: "", component: ScheduleComponent }])],
+  imports: [
+    RouterModule.forRoot([
+      { path: "", component: ScheduleComponent },
+      { path: "nearby", component: NearbyComponent }
+    ])
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

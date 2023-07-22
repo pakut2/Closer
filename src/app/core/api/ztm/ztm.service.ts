@@ -1,11 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { StopIdentifier } from "@types";
-import { removeDiacritics } from "@utilities";
-import { concatMap, map, Observable, zip } from "rxjs";
+import { Coords } from "@types";
+import { crowDistance, removeDiacritics } from "@utilities";
+import { concatMap, map, Observable, of, zip } from "rxjs";
 
 import { ZtmConfigService } from "./config";
 import {
+  GeolocalizedZtmStopMetadata,
+  GeolocalizedZtmStopWithRelatedStops,
+  GeolocalizedZtmStopWithSchedules,
   URBAN_ZONE_ID,
   ZtmSchedulesResponse,
   ZtmStopsResponse,
@@ -22,36 +25,16 @@ export class ZtmService {
     private readonly configService: ZtmConfigService
   ) {}
 
-  getStops(): Observable<ZtmStopsResponse> {
-    if (!this.stops) {
-      this.stops = this.httpClient.get<ZtmStopsResponse>(this.configService.stopsEndpointUrl).pipe(
-        map(stopsResponse => ({
-          ...stopsResponse,
-          stops: stopsResponse.stops.filter(stop => stop.zoneId === URBAN_ZONE_ID)
-        }))
-      );
-    }
-
-    return this.stops;
-  }
-
-  getStopsWithSchedules(stopIds: StopIdentifier[]): Observable<ZtmStopWithSchedules[]> {
-    return zip(
-      stopIds.map(stopId => this.getScheduleByStopName(stopId.name, stopId.ordinalNumber))
-    );
-  }
-
-  private getScheduleByStopName(
-    stopName: string,
-    ordinalNumber: string
-  ): Observable<ZtmStopWithSchedules> {
+  getStopWithSchedules(stopName: string, ordinalNumber: string): Observable<ZtmStopWithSchedules> {
     return this.getStopByName(stopName, ordinalNumber).pipe(
-      concatMap(stop =>
+      concatMap(ztmStop =>
         this.httpClient
           .get<ZtmSchedulesResponse>(
-            this.configService.schedulesByStopIdEndpointUrl(String(stop.stopId))
+            this.configService.schedulesByStopIdEndpointUrl(String(ztmStop.stopId))
           )
-          .pipe(map(ztmSchedules => ({ ...ztmSchedules, stop } satisfies ZtmStopWithSchedules)))
+          .pipe(
+            map(ztmSchedules => ({ ...ztmSchedules, stop: ztmStop } satisfies ZtmStopWithSchedules))
+          )
       )
     );
   }
@@ -66,8 +49,9 @@ export class ZtmService {
 
         const stops = stopsResponse.stops
           .filter(stop => removeDiacritics(stop.stopName) === stopNameWithoutDiacritics)
-          .sort(({ stopCode: stopCode1 }, { stopCode: stopCode2 }) =>
-            stopCode1.localeCompare(stopCode2)
+          .sort(
+            ({ stopCode: stopCode1 }, { stopCode: stopCode2 }) =>
+              parseInt(stopCode1) - parseInt(stopCode2)
           );
 
         if (!stops.length) {
@@ -82,6 +66,128 @@ export class ZtmService {
           ...targetStop,
           relatedStops: stops.map(stop => ({ stopId: stop.stopId, stopCode: stop.stopCode }))
         } satisfies ZtmStopWithRelatedStops;
+      })
+    );
+  }
+
+  getStops(): Observable<ZtmStopsResponse> {
+    if (!this.stops) {
+      this.stops = this.httpClient.get<ZtmStopsResponse>(this.configService.stopsEndpointUrl).pipe(
+        map(stopsResponse => ({
+          ...stopsResponse,
+          stops: stopsResponse.stops.filter(stop => stop.zoneId === URBAN_ZONE_ID)
+        }))
+      );
+    }
+
+    return this.stops;
+  }
+
+  getGeolocalizedStopsWithSchedules(
+    currentLocation: Coords,
+    searchRadius: number
+  ): Observable<GeolocalizedZtmStopWithSchedules[]> {
+    return this.getStopsInRadius(currentLocation, searchRadius).pipe(
+      concatMap(ztmStops =>
+        ztmStops.length
+          ? zip(
+              ztmStops.map(ztmStop =>
+                this.httpClient
+                  .get<ZtmSchedulesResponse>(
+                    this.configService.schedulesByStopIdEndpointUrl(String(ztmStop.stopId))
+                  )
+                  .pipe(
+                    map(
+                      ztmSchedules =>
+                        ({
+                          ...ztmSchedules,
+                          stop: ztmStop
+                        } satisfies GeolocalizedZtmStopWithSchedules)
+                    )
+                  )
+              )
+            )
+          : of([])
+      )
+    );
+  }
+
+  private getStopsInRadius(
+    currentLocation: Coords,
+    searchRadius: number
+  ): Observable<GeolocalizedZtmStopWithRelatedStops[]> {
+    return this.getStops().pipe(
+      map(({ stops: ztmStops }) => {
+        const foundStops: { [stopName: string]: GeolocalizedZtmStopWithRelatedStops } = {};
+
+        for (const stop of ztmStops) {
+          if (foundStops[stop.stopName]) {
+            continue;
+          }
+
+          const distanceToStop = crowDistance(currentLocation, {
+            lat: stop.stopLat,
+            lon: stop.stopLon
+          });
+
+          if (distanceToStop <= searchRadius) {
+            foundStops[stop.stopName] = {
+              ...stop,
+              distance: distanceToStop,
+              relatedStops: [
+                {
+                  stopId: stop.stopId,
+                  stopCode: stop.stopCode,
+                  stopLat: stop.stopLat,
+                  stopLon: stop.stopLon,
+                  distance: distanceToStop
+                }
+              ]
+            };
+          }
+        }
+
+        for (const stop of ztmStops) {
+          if (
+            foundStops[stop.stopName] &&
+            !foundStops[stop.stopName].relatedStops.some(
+              relatedStop => relatedStop.stopCode === stop.stopCode
+            )
+          ) {
+            const distanceToStop = crowDistance(currentLocation, {
+              lat: stop.stopLat,
+              lon: stop.stopLon
+            });
+
+            const stopMetadata: GeolocalizedZtmStopMetadata = {
+              stopId: stop.stopId,
+              stopCode: stop.stopCode,
+              stopLat: stop.stopLat,
+              stopLon: stop.stopLon,
+              distance: distanceToStop
+            };
+
+            if (parseInt(stop.stopCode) < parseInt(foundStops[stop.stopName].stopCode)) {
+              foundStops[stop.stopName] = {
+                ...stop,
+                distance: distanceToStop,
+                relatedStops: [...foundStops[stop.stopName].relatedStops, stopMetadata]
+              };
+            } else {
+              foundStops[stop.stopName].relatedStops.push(stopMetadata);
+            }
+          }
+        }
+
+        return Object.values(foundStops)
+          .map(stop => ({
+            ...stop,
+            relatedStops: stop.relatedStops.sort(
+              ({ stopCode: stopCode1 }, { stopCode: stopCode2 }) =>
+                parseInt(stopCode1) - parseInt(stopCode2)
+            )
+          }))
+          .sort(({ distance: distance1 }, { distance: distance2 }) => distance1 - distance2);
       })
     );
   }

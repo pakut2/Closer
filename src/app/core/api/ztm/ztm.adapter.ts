@@ -1,10 +1,15 @@
 import { Injectable } from "@angular/core";
-import { Stop, StopIdentifier } from "@types";
+import { Coords, GeolocalizedStop, Stop, StopIdentifier } from "@types";
 import { minuteDifference } from "@utilities";
 import { DateTime } from "luxon";
-import { map, Observable } from "rxjs";
+import { map, Observable, of, zip } from "rxjs";
 
-import { NIGHT_LINE_INDICATOR, NIGHT_LINE_PREFIX, ZtmStopWithSchedules } from "./domain";
+import {
+  GeolocalizedZtmStopWithSchedules,
+  NIGHT_LINE_INDICATOR,
+  NIGHT_LINE_PREFIX,
+  ZtmStopWithSchedules
+} from "./domain";
 import { ZtmService } from "./ztm.service";
 
 @Injectable({ providedIn: "root" })
@@ -18,9 +23,19 @@ export class ZtmAdapter {
   }
 
   getStopsWithSchedules(stopIds: StopIdentifier[]): Observable<Stop[]> {
+    return stopIds.length
+      ? zip(
+          stopIds.map(({ name: stopName, ordinalNumber }) =>
+            this.ztmService.getStopWithSchedules(stopName, ordinalNumber)
+          )
+        ).pipe(map(ztmStops => ztmStops.map(ztmStop => this.prepareStop(ztmStop))))
+      : of([]);
+  }
+
+  getStopWithSchedules({ name: stopName, ordinalNumber }: StopIdentifier): Observable<Stop> {
     return this.ztmService
-      .getStopsWithSchedules(stopIds)
-      .pipe(map(ztmSchedules => ztmSchedules.map(ztmSchedule => this.prepareStop(ztmSchedule))));
+      .getStopWithSchedules(stopName, ordinalNumber)
+      .pipe(map(ztmStop => this.prepareStop(ztmStop)));
   }
 
   private prepareStop(ztmSchedule: ZtmStopWithSchedules): Stop {
@@ -39,8 +54,7 @@ export class ZtmAdapter {
         lineNumber: this.handleNightLine(String(schedule.routeId)),
         destination: schedule.headsign,
         departsIn: this.getMinuteDifference(currentIsoDate, schedule.estimatedTime)
-      })),
-      location: { lat: stop.stopLat, lon: stop.stopLon }
+      }))
     };
   }
 
@@ -60,5 +74,34 @@ export class ZtmAdapter {
     const timeRemaining = minuteDifference(currentIsoDate, targetIsoDate);
 
     return timeRemaining > 0 ? `${timeRemaining} min` : ">>>";
+  }
+
+  getGeolocalizedStopsWithSchedules(
+    currentLocation: Coords,
+    searchRadius: number
+  ): Observable<GeolocalizedStop[]> {
+    return this.ztmService
+      .getGeolocalizedStopsWithSchedules(currentLocation, searchRadius)
+      .pipe(map(ztmStops => ztmStops.map(ztmStop => this.prepareGeolocalizedStop(ztmStop))));
+  }
+
+  private prepareGeolocalizedStop(ztmSchedule: GeolocalizedZtmStopWithSchedules): GeolocalizedStop {
+    const { stop } = ztmSchedule;
+
+    return {
+      ...this.prepareStop(ztmSchedule),
+      location: {
+        coords: { lat: stop.stopLat, lon: stop.stopLon },
+        distance: Math.round(stop.distance)
+      },
+      relatedStops: stop.relatedStops.map(stopMetadata => ({
+        id: String(stopMetadata.stopId),
+        ordinalNumber: stopMetadata.stopCode,
+        location: {
+          coords: { lat: stopMetadata.stopLat, lon: stopMetadata.stopLon },
+          distance: Math.round(stopMetadata.distance)
+        }
+      }))
+    };
   }
 }

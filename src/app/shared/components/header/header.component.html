@@ -1,4 +1,19 @@
 <header>
   <h4>Closer</h4>
-  <app-search />
+
+  <ng-container *ngIf="currentRoute$ | async as currentRoute">
+    <ng-container *ngIf="currentRoute === '/'">
+      <app-search />
+    </ng-container>
+
+    <ng-container *ngIf="currentRoute === '/nearby'">
+      <app-labeled-menu
+        label="Distance"
+        [icon]="radiusIcon"
+        [menuItems]="allowedSearchDistance"
+        (selected)="changeSearchDistance($event)"
+      />
+      <ng-template #radiusIcon><mat-icon fontIcon="adjust" /></ng-template>
+    </ng-container>
+  </ng-container>
 </header>

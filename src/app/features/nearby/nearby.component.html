@@ -1,11 +1,10 @@
 <section>
   <ng-container *ngIf="stops$ | async as stops; else loader">
     <ng-container *ngIf="stops.length; else noStops">
-      <ng-container *ngFor="let stop of stops; trackBy: trackStops">
-        <app-schedule-stop-card
+      <ng-container *ngFor="let stop of stops">
+        <app-nearby-stop-card
           [stop]="stop"
-          (changeSchedule)="scheduleService.changeStopSchedule(stop, $event)"
-          (remove)="scheduleService.removeStopByName(stop.name)"
+          (changeSchedule)="this.nearbyService.changeStopSchedule(stop, $event)"
         />
       </ng-container>
     </ng-container>

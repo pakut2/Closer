@@ -1,7 +1,11 @@
-import { ZtmStopWithRelatedStops } from "./ztm-stop";
+import { GeolocalizedZtmStopWithRelatedStops, ZtmStopWithRelatedStops } from "./ztm-stop";
 
 export interface ZtmStopWithSchedules extends ZtmSchedulesResponse {
   stop: ZtmStopWithRelatedStops;
+}
+
+export interface GeolocalizedZtmStopWithSchedules extends ZtmSchedulesResponse {
+  stop: GeolocalizedZtmStopWithRelatedStops;
 }
 
 export interface ZtmSchedulesResponse {
