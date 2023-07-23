@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
@@ -15,13 +15,12 @@ import { ScheduleService } from "./schedule.service";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduleComponent implements OnInit {
-  private readonly destroyRef = inject(DestroyRef);
-
   stops$!: Observable<Stop[] | null>;
 
   constructor(
     readonly scheduleService: ScheduleService,
-    private readonly messagingService: MessagingService
+    private readonly messagingService: MessagingService,
+    private readonly destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {

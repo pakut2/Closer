@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from "@angular/core";
+import { Component, DestroyRef, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
@@ -14,13 +14,12 @@ import { NearbyService } from "./nearby.service";
   providers: [NearbyService]
 })
 export class NearbyComponent implements OnInit {
-  private readonly destroyRef = inject(DestroyRef);
-
   stops$!: Observable<GeolocalizedStop[] | null>;
 
   constructor(
     readonly nearbyService: NearbyService,
-    private readonly messagingService: MessagingService
+    private readonly messagingService: MessagingService,
+    private readonly destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {

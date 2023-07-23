@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable } from "@angular/core";
+import { DestroyRef, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BASE_ORDINAL_NUMBER } from "@constants";
 import { StopConflictError, StopNotFoundError, STORAGE_KEY, StorageService } from "@core";
@@ -9,17 +9,16 @@ import { BehaviorSubject } from "rxjs";
 
 @Injectable()
 export class ScheduleService {
-  private readonly destroyRef = inject(DestroyRef);
-
   private readonly stopsAction = new BehaviorSubject<Stop[] | null>(null);
   readonly stops$ = this.stopsAction.asObservable();
 
   constructor(
     private readonly ztmAdapter: ZtmAdapter,
-    private readonly storageService: StorageService<StopIdentifier[]>
+    private readonly storageService: StorageService<StopIdentifier[]>,
+    private readonly destroyRef: DestroyRef
   ) {
     this.getStops();
-    minuteStart$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.getStops());
+    minuteStart$.pipe(takeUntilDestroyed()).subscribe(() => this.getStops());
   }
 
   private get stops() {

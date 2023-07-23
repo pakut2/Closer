@@ -1,4 +1,4 @@
-import { DestroyRef, Inject, inject, Injectable } from "@angular/core";
+import { DestroyRef, Inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DEFAULT_SEARCH_DISTANCE } from "@constants";
 import { StopNotFoundError } from "@core";
@@ -9,8 +9,6 @@ import { BehaviorSubject } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class NearbyService {
-  private readonly destroyRef = inject(DestroyRef);
-
   private readonly stopsAction = new BehaviorSubject<GeolocalizedStop[] | null>(null);
   readonly stops$ = this.stopsAction.asObservable();
 
@@ -18,12 +16,11 @@ export class NearbyService {
 
   constructor(
     @Inject("CURRENT_LOCATION") private readonly currentLocation: Coords,
-    private readonly ztmAdapter: ZtmAdapter
+    private readonly ztmAdapter: ZtmAdapter,
+    private readonly destroyRef: DestroyRef
   ) {
     this.getGeolocalizedStops();
-    minuteStart$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.updateStopSchedules());
+    minuteStart$.pipe(takeUntilDestroyed()).subscribe(() => this.updateStopSchedules());
   }
 
   private get stops() {
