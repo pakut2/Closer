@@ -13,10 +13,10 @@
     "android:open": "npx cap open android",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "eslint": "eslint \"src/**\" --max-warnings=0 --fix",
-    "stylelint": "stylelint \"src/**/*.scss\"",
-    "prettier:write": "prettier --write \"**/*.(html|scss|ts)\"",
-    "prettier:check": "prettier --check \"**/*.(html|scss|ts)\""
+    "eslint": "eslint --max-warnings=0 --fix",
+    "stylelint": "stylelint",
+    "prettier:check": "prettier --check",
+    "prettier:write": "prettier --write \"src/**/*.(html|scss|ts)\""
   },
   "dependencies": {
     "@angular/animations": "^16.1.0",
@@ -75,8 +75,10 @@
     "typescript": "~5.1.3"
   },
   "lint-staged": {
+    "*.(html|scss|ts)": [
+      "pnpm prettier:check"
+    ],
     "*.(html|ts)": [
-      "pnpm prettier:check",
       "pnpm eslint"
     ],
     "*.scss": [
