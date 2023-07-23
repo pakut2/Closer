@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { StopNotFoundError } from "@core";
 import { Coords } from "@types";
 import { crowDistance, removeDiacritics } from "@utilities";
 import { concatMap, map, Observable, of, zip } from "rxjs";
@@ -55,9 +56,7 @@ export class ZtmService {
           );
 
         if (!stops.length) {
-          // TODO error handling (toast?)
-          console.error(`Stop with name ${stopName} not found`);
-          throw new Error();
+          throw new StopNotFoundError(stopName);
         }
 
         const targetStop = stops.find(stop => stop.stopCode === ordinalNumber) ?? stops[0];

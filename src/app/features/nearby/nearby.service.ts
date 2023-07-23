@@ -1,6 +1,7 @@
 import { DestroyRef, Inject, inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DEFAULT_SEARCH_DISTANCE } from "@constants";
+import { StopNotFoundError } from "@core";
 import { Coords, GeolocalizedStop } from "@types";
 import { minuteStart$ } from "@utilities";
 import { ZtmAdapter } from "@ztm";
@@ -83,9 +84,7 @@ export class NearbyService {
     }
 
     if (!currentStops.some(stop => stop.name === existingStop.name)) {
-      // TODO toast
-      console.log("stop not found");
-      return;
+      throw new StopNotFoundError(existingStop.name);
     }
 
     this.ztmAdapter

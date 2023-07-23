@@ -88,3 +88,11 @@ body {
 main {
   overflow: auto;
 }
+
+.snackbar {
+  text-align: center;
+  font-size: 0.9rem;
+
+  --mdc-snackbar-container-color: #f54538;
+  --mdc-snackbar-supporting-text-color: #fafafa;
+}

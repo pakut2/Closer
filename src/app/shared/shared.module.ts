@@ -5,6 +5,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { ZtmModule } from "@ztm";
 
@@ -13,6 +14,7 @@ import {
   HeaderComponent,
   LabeledMenuComponent,
   SearchComponent,
+  Snackbar,
   StopScheduleListComponent
 } from "./components";
 
@@ -30,12 +32,14 @@ import {
     MatAutocompleteModule,
     MatIconModule,
     MatMenuModule,
+    MatSnackBarModule,
     ReactiveFormsModule,
     ZtmModule,
     RouterLink,
     RouterLinkActive,
     MatMenuModule,
     MatProgressSpinnerModule
-  ]
+  ],
+  providers: [Snackbar]
 })
 export class SharedModule {}

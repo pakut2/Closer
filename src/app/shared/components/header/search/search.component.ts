@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } fro
 import { FormBuilder } from "@angular/forms";
 import { MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { EVENT_NAME } from "@constants";
-import { MessagingService } from "@core";
+import { MessagingService, StopNotFoundError } from "@core";
 import { Observable } from "rxjs";
 
+import { Snackbar } from "../../snackbar/snackbar";
 import { SearchService } from "./search.service";
 
 interface FormValue {
@@ -29,7 +30,8 @@ export class SearchComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly searchService: SearchService,
-    private readonly messagingService: MessagingService
+    private readonly messagingService: MessagingService,
+    private readonly snackbar: Snackbar
   ) {}
 
   ngOnInit(): void {
@@ -50,8 +52,7 @@ export class SearchComponent implements OnInit {
     setTimeout(() => this.stopNameInput.nativeElement.blur());
 
     if (!stopName) {
-      // TODO toast
-      return;
+      throw new StopNotFoundError();
     }
 
     this.messagingService.sendMessage({ eventName: EVENT_NAME.ADD_STOP, payload: { stopName } });

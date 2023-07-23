@@ -8,3 +8,5 @@ export const BASE_ORDINAL_NUMBER = "01";
 
 export const DEFAULT_SEARCH_DISTANCE = 500;
 export const SEARCH_DISTANCE = [500, 1000, 2500, 5000] as const;
+
+export const MILLISECONDS_IN_SECOND = 1000;

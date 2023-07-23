@@ -1,7 +1,7 @@
 import { DestroyRef, inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BASE_ORDINAL_NUMBER } from "@constants";
-import { STORAGE_KEY, StorageService } from "@core";
+import { StopConflictError, StopNotFoundError, STORAGE_KEY, StorageService } from "@core";
 import { Stop, StopIdentifier } from "@types";
 import { minuteStart$, removeDiacritics } from "@utilities";
 import { ZtmAdapter } from "@ztm";
@@ -62,9 +62,7 @@ export class ScheduleService {
     const stopNameWithoutDiacritics = removeDiacritics(stopName);
 
     if (currentStops.some(stop => removeDiacritics(stop.name) === stopNameWithoutDiacritics)) {
-      // TODO toast
-      console.log("duplicate stop");
-      return;
+      throw new StopConflictError(stopName);
     }
 
     this.ztmAdapter
@@ -87,9 +85,7 @@ export class ScheduleService {
     }
 
     if (!currentStops.some(stop => stop.name === existingStop.name)) {
-      // TODO toast
-      console.log("stop not found");
-      return;
+      throw new StopNotFoundError(existingStop.name);
     }
 
     this.ztmAdapter
