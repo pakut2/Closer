@@ -50,7 +50,6 @@
               "includePaths": ["src/app/shared/styles"]
             },
             "styles": ["src/base.scss"],
-            "assets": ["src/assets"],
             "scripts": []
           },
           "configurations": {
