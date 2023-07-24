@@ -1,7 +1,13 @@
 import { DestroyRef, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { BASE_ORDINAL_NUMBER } from "@constants";
-import { StopConflictError, StopNotFoundError, STORAGE_KEY, StorageService } from "@core";
+import { BASE_ORDINAL_NUMBER, EVENT_NAME } from "@constants";
+import {
+  MessagingService,
+  StopConflictError,
+  StopNotFoundError,
+  STORAGE_KEY,
+  StorageService
+} from "@core";
 import { Stop, StopIdentifier } from "@types";
 import { minuteStart$, removeDiacritics } from "@utilities";
 import { ZtmAdapter } from "@ztm";
@@ -15,6 +21,7 @@ export class ScheduleService {
   constructor(
     private readonly ztmAdapter: ZtmAdapter,
     private readonly storageService: StorageService<StopIdentifier[]>,
+    private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef
   ) {
     this.getStops();
@@ -73,6 +80,8 @@ export class ScheduleService {
         } else {
           this.stops = [newStop];
         }
+
+        this.messagingService.sendMessage({ eventName: EVENT_NAME.STOP_ADDED, payload: null });
       });
   }
 

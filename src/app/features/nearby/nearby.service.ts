@@ -7,7 +7,7 @@ import { minuteStart$ } from "@utilities";
 import { ZtmAdapter } from "@ztm";
 import { BehaviorSubject } from "rxjs";
 
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class NearbyService {
   private readonly stopsAction = new BehaviorSubject<GeolocalizedStop[] | null>(null);
   readonly stops$ = this.stopsAction.asObservable();

@@ -1,6 +1,10 @@
 import { EVENT_NAME } from "@constants";
 
-export type Message = InitialMessage | AddStopMessage | ChangeSearchDistanceMessage;
+export type Message =
+  | InitialMessage
+  | AddStopMessage
+  | StopAddedMessage
+  | ChangeSearchDistanceMessage;
 
 export interface InitialMessage {
   eventName: typeof EVENT_NAME.INITIAL;
@@ -10,6 +14,11 @@ export interface InitialMessage {
 export interface AddStopMessage {
   eventName: typeof EVENT_NAME.ADD_STOP;
   payload: { stopName: string };
+}
+
+export interface StopAddedMessage {
+  eventName: typeof EVENT_NAME.STOP_ADDED;
+  payload: null;
 }
 
 export interface ChangeSearchDistanceMessage {

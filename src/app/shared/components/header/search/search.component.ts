@@ -5,7 +5,6 @@ import { EVENT_NAME } from "@constants";
 import { MessagingService, StopNotFoundError } from "@core";
 import { Observable } from "rxjs";
 
-import { Snackbar } from "../../snackbar/snackbar";
 import { SearchService } from "./search.service";
 
 interface FormValue {
@@ -30,8 +29,7 @@ export class SearchComponent implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly searchService: SearchService,
-    private readonly messagingService: MessagingService,
-    private readonly snackbar: Snackbar
+    private readonly messagingService: MessagingService
   ) {}
 
   ngOnInit(): void {

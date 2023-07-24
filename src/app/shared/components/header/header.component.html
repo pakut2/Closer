@@ -9,11 +9,11 @@
     <ng-container *ngIf="currentRoute === '/nearby'">
       <app-labeled-menu
         label="Distance"
-        [icon]="radiusIcon"
+        [icon]="distanceIcon"
         [menuItems]="allowedSearchDistance"
         (selected)="changeSearchDistance($event)"
       />
-      <ng-template #radiusIcon><mat-icon fontIcon="adjust" /></ng-template>
+      <ng-template #distanceIcon><mat-icon fontIcon="adjust" /></ng-template>
     </ng-container>
   </ng-container>
 </header>
