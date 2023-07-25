@@ -8,7 +8,7 @@ import {
   STORAGE_KEY,
   StorageService
 } from "@core";
-import { Stop, StopIdentifier } from "@types";
+import { Stop, StopSlug } from "@types";
 import { minuteStart$, removeDiacritics } from "@utilities";
 import { ZtmAdapter } from "@ztm";
 import { BehaviorSubject } from "rxjs";
@@ -20,7 +20,7 @@ export class ScheduleService {
 
   constructor(
     private readonly ztmAdapter: ZtmAdapter,
-    private readonly storageService: StorageService<StopIdentifier[]>,
+    private readonly storageService: StorageService<StopSlug[]>,
     private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef
   ) {

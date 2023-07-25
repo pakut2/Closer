@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Coords, GeolocalizedStop, Stop, StopIdentifier } from "@types";
+import { Coords, GeolocalizedStop, Stop, StopSlug } from "@types";
 import { minuteDifference } from "@utilities";
 import { DateTime } from "luxon";
 import { map, Observable, of, zip } from "rxjs";
@@ -22,7 +22,7 @@ export class ZtmAdapter {
       .pipe(map(ztmStops => [...new Set(ztmStops.stops.map(stop => stop.stopName))].sort()));
   }
 
-  getStopsWithSchedules(stopIds: StopIdentifier[]): Observable<Stop[]> {
+  getStopsWithSchedules(stopIds: StopSlug[]): Observable<Stop[]> {
     return stopIds.length
       ? zip(
           stopIds.map(({ name: stopName, ordinalNumber }) =>
@@ -32,7 +32,7 @@ export class ZtmAdapter {
       : of([]);
   }
 
-  getStopWithSchedules({ name: stopName, ordinalNumber }: StopIdentifier): Observable<Stop> {
+  getStopWithSchedules({ name: stopName, ordinalNumber }: StopSlug): Observable<Stop> {
     return this.ztmService
       .getStopWithSchedules(stopName, ordinalNumber)
       .pipe(map(ztmStop => this.prepareStop(ztmStop)));
