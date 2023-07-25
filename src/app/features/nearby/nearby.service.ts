@@ -5,7 +5,7 @@ import { StopNotFoundError } from "@core";
 import { Coords, GeolocalizedStop } from "@types";
 import { minuteStart$ } from "@utilities";
 import { ZtmAdapter } from "@ztm";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable, switchMap } from "rxjs";
 
 @Injectable()
 export class NearbyService {
@@ -15,7 +15,7 @@ export class NearbyService {
   private searchDistance = DEFAULT_SEARCH_DISTANCE;
 
   constructor(
-    @Inject("CURRENT_LOCATION") private readonly currentLocation: Coords,
+    @Inject("CURRENT_LOCATION") private readonly currentLocation: Observable<Coords>,
     private readonly ztmAdapter: ZtmAdapter,
     private readonly destroyRef: DestroyRef
   ) {
@@ -36,9 +36,13 @@ export class NearbyService {
   }
 
   getGeolocalizedStops(): void {
-    this.ztmAdapter
-      .getGeolocalizedStopsWithSchedules(this.currentLocation, this.searchDistance)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    this.currentLocation
+      .pipe(
+        switchMap(currentLocation =>
+          this.ztmAdapter.getGeolocalizedStopsWithSchedules(currentLocation, this.searchDistance)
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(stops => (this.stops = stops));
   }
 
