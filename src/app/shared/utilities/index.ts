@@ -1,4 +1,4 @@
-export * from "./crow-distance";
 export * from "./diacritics";
-export * from "./minute-difference";
-export * from "./minute-start";
+export * from "./distance";
+export * from "./scroll";
+export * from "./time";
