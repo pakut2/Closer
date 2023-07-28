@@ -35,7 +35,7 @@ interface StopLocation {
   distance: number;
 }
 
-export interface StopSlug {
+export interface StopNaturalKey {
   name: string;
   ordinalNumber: string;
 }

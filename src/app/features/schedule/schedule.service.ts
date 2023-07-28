@@ -8,8 +8,8 @@ import {
   STORAGE_KEY,
   StorageService
 } from "@core";
-import { Stop, StopSlug } from "@types";
-import { minuteStart$, removeDiacritics } from "@utilities";
+import { Stop, StopNaturalKey } from "@types";
+import { removeDiacritics, Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
 import { BehaviorSubject } from "rxjs";
 
@@ -20,12 +20,16 @@ export class ScheduleService {
 
   constructor(
     private readonly ztmAdapter: ZtmAdapter,
-    private readonly storageService: StorageService<StopSlug[]>,
+    private readonly storageService: StorageService<StopNaturalKey[]>,
+    private readonly time: Time,
     private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef
   ) {
     this.getStops();
-    minuteStart$.pipe(takeUntilDestroyed()).subscribe(() => this.getStops());
+    this.time
+      .onMinuteStart()
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.getStops());
   }
 
   private get stops() {
@@ -107,6 +111,13 @@ export class ScheduleService {
 
           return updatedStop;
         });
+
+        setTimeout(() =>
+          this.messagingService.sendMessage({
+            eventName: EVENT_NAME.STOP_MODIFIED,
+            payload: { stopName: existingStop.name }
+          })
+        );
       });
   }
 

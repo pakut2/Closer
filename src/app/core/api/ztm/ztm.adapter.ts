@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Coords, GeolocalizedStop, Stop, StopSlug } from "@types";
-import { minuteDifference } from "@utilities";
+import { Coords, GeolocalizedStop, Stop, StopNaturalKey } from "@types";
+import { Time } from "@utilities";
 import { DateTime } from "luxon";
 import { map, Observable, of, zip } from "rxjs";
 
@@ -14,7 +14,7 @@ import { ZtmService } from "./ztm.service";
 
 @Injectable({ providedIn: "root" })
 export class ZtmAdapter {
-  constructor(private readonly ztmService: ZtmService) {}
+  constructor(private readonly ztmService: ZtmService, private readonly time: Time) {}
 
   getUniqueStopNames(): Observable<string[]> {
     return this.ztmService
@@ -22,7 +22,7 @@ export class ZtmAdapter {
       .pipe(map(ztmStops => [...new Set(ztmStops.stops.map(stop => stop.stopName))].sort()));
   }
 
-  getStopsWithSchedules(stopIds: StopSlug[]): Observable<Stop[]> {
+  getStopsWithSchedules(stopIds: StopNaturalKey[]): Observable<Stop[]> {
     return stopIds.length
       ? zip(
           stopIds.map(({ name: stopName, ordinalNumber }) =>
@@ -32,7 +32,7 @@ export class ZtmAdapter {
       : of([]);
   }
 
-  getStopWithSchedules({ name: stopName, ordinalNumber }: StopSlug): Observable<Stop> {
+  getStopWithSchedules({ name: stopName, ordinalNumber }: StopNaturalKey): Observable<Stop> {
     return this.ztmService
       .getStopWithSchedules(stopName, ordinalNumber)
       .pipe(map(ztmStop => this.prepareStop(ztmStop)));
@@ -71,7 +71,9 @@ export class ZtmAdapter {
       return targetTime;
     }
 
-    const timeRemaining = minuteDifference(currentIsoDate, targetIsoDate);
+    const timeRemaining = this.time.minuteDifference(currentIsoDate, targetIsoDate);
+
+    // console.log(currentIsoDate, targetTime, timeRemaining);
 
     return timeRemaining > 0 ? `${timeRemaining} min` : ">>>";
   }

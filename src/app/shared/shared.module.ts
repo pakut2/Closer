@@ -7,6 +7,7 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { RouterLink, RouterLinkActive } from "@angular/router";
+import { Scroll } from "@utilities";
 import { ZtmModule } from "@ztm";
 
 import {
@@ -40,6 +41,6 @@ import {
     MatMenuModule,
     MatProgressSpinnerModule
   ],
-  providers: [Snackbar]
+  providers: [Snackbar, Scroll]
 })
 export class SharedModule {}

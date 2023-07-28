@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
 import { Stop } from "@types";
+import { Scroll } from "@utilities";
 import { filter, Observable } from "rxjs";
 
 import { ScheduleService } from "./schedule.service";
@@ -29,7 +30,8 @@ export class ScheduleComponent implements OnInit {
   constructor(
     readonly scheduleService: ScheduleService,
     private readonly messagingService: MessagingService,
-    private readonly destroyRef: DestroyRef
+    private readonly destroyRef: DestroyRef,
+    private readonly scroll: Scroll
   ) {}
 
   ngOnInit(): void {
@@ -37,11 +39,10 @@ export class ScheduleComponent implements OnInit {
 
     this.messagingService.currentMessage
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        filter(
-          ({ eventName }) =>
-            eventName === EVENT_NAME.ADD_STOP || eventName === EVENT_NAME.STOP_ADDED
-        )
+        filter(({ eventName }) =>
+          [EVENT_NAME.ADD_STOP, EVENT_NAME.STOP_ADDED, EVENT_NAME.STOP_MODIFIED].includes(eventName)
+        ),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(message => {
         switch (message.eventName) {
@@ -49,7 +50,7 @@ export class ScheduleComponent implements OnInit {
             return this.scheduleService.addStopByName(message.payload.stopName);
           }
           case EVENT_NAME.STOP_ADDED: {
-            return this.scrollToBottom();
+            return setTimeout(() => this.scroll.scrollToElement(this.pageBottom));
           }
         }
       });
@@ -57,13 +58,5 @@ export class ScheduleComponent implements OnInit {
 
   trackStops(index: number, stop: Stop): string {
     return stop.id;
-  }
-
-  scrollToBottom(): void {
-    setTimeout(() =>
-      this.pageBottom.nativeElement.scrollIntoView({
-        behavior: "smooth"
-      })
-    );
   }
 }

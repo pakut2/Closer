@@ -27,8 +27,8 @@ export class NearbyComponent implements OnInit {
 
     this.messagingService.currentMessage
       .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        filter(message => message.eventName === EVENT_NAME.CHANGE_SEARCH_DISTANCE)
+        filter(({ eventName }) => eventName === EVENT_NAME.CHANGE_SEARCH_DISTANCE),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(message =>
         this.nearbyService.changeSearchDistance(

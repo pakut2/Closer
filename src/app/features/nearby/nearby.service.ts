@@ -1,9 +1,9 @@
 import { DestroyRef, Inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { DEFAULT_SEARCH_DISTANCE } from "@constants";
-import { StopNotFoundError } from "@core";
+import { DEFAULT_SEARCH_DISTANCE, EVENT_NAME } from "@constants";
+import { MessagingService, StopNotFoundError } from "@core";
 import { Coords, GeolocalizedStop } from "@types";
-import { minuteStart$ } from "@utilities";
+import { Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
 import { BehaviorSubject, Observable, switchMap } from "rxjs";
 
@@ -17,10 +17,15 @@ export class NearbyService {
   constructor(
     @Inject("CURRENT_LOCATION") private readonly currentLocation: Observable<Coords>,
     private readonly ztmAdapter: ZtmAdapter,
+    private readonly time: Time,
+    private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef
   ) {
     this.getGeolocalizedStops();
-    minuteStart$.pipe(takeUntilDestroyed()).subscribe(() => this.updateStopSchedules());
+    this.time
+      .onMinuteStart()
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.updateStopSchedules());
   }
 
   private get stops() {
@@ -106,6 +111,13 @@ export class NearbyService {
               )?.location ?? existingStop.location
           };
         });
+
+        setTimeout(() =>
+          this.messagingService.sendMessage({
+            eventName: EVENT_NAME.STOP_MODIFIED,
+            payload: { stopName: existingStop.name }
+          })
+        );
       });
   }
 }

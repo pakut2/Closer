@@ -4,6 +4,7 @@ export type Message =
   | InitialMessage
   | AddStopMessage
   | StopAddedMessage
+  | StopModifiedMessage
   | ChangeSearchDistanceMessage;
 
 export interface InitialMessage {
@@ -19,6 +20,11 @@ export interface AddStopMessage {
 export interface StopAddedMessage {
   eventName: typeof EVENT_NAME.STOP_ADDED;
   payload: null;
+}
+
+export interface StopModifiedMessage {
+  eventName: typeof EVENT_NAME.STOP_MODIFIED;
+  payload: { stopName: string };
 }
 
 export interface ChangeSearchDistanceMessage {
