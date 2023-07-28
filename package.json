@@ -33,6 +33,7 @@
     "@capacitor/angular": "2.0.3",
     "@capacitor/core": "latest",
     "@capacitor/geolocation": "5.0.6",
+    "@capacitor/preferences": "5.0.6",
     "latinize": "^0.5.0",
     "luxon": "^3.3.0",
     "rxjs": "~7.8.0",

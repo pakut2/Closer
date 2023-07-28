@@ -47,6 +47,9 @@ dependencies:
   '@capacitor/geolocation':
     specifier: 5.0.6
     version: 5.0.6(@capacitor/core@5.2.2)
+  '@capacitor/preferences':
+    specifier: 5.0.6
+    version: 5.0.6(@capacitor/core@5.2.2)
   latinize:
     specifier: ^0.5.0
     version: 0.5.0
@@ -2027,6 +2030,14 @@ packages:
 
   /@capacitor/geolocation@5.0.6(@capacitor/core@5.2.2):
     resolution: {integrity: sha512-3pB3CBa38aDMk7zouGbjOMBytcaqRMBosMcqNrOQjE5LMBAPUI1cEGrUzmkj+scP0SIyYGA95Tkj0BAnzvNWag==}
+    peerDependencies:
+      '@capacitor/core': ^5.0.0
+    dependencies:
+      '@capacitor/core': 5.2.2
+    dev: false
+
+  /@capacitor/preferences@5.0.6(@capacitor/core@5.2.2):
+    resolution: {integrity: sha512-aDe4wGTVSAIue6XXdUFgyz7SGszxK/Ptt/iWTydMpzc1PlZXw1XTTnciM+S+SLLNZFzXlkpXT3wMnh9t0DojUA==}
     peerDependencies:
       '@capacitor/core': ^5.0.0
     dependencies:

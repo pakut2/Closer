@@ -11,7 +11,7 @@ import {
 import { Stop, StopNaturalKey } from "@types";
 import { removeDiacritics, Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, of, switchMap } from "rxjs";
 
 @Injectable()
 export class ScheduleService {
@@ -39,11 +39,11 @@ export class ScheduleService {
   private set stops(stops: Stop[] | null) {
     if (!stops?.length) {
       this.stopsAction.next([]);
-      this.storageService.add(STORAGE_KEY.STOPS, []);
+      this.storageService.set(STORAGE_KEY.STOPS, []);
     }
 
     this.stopsAction.next(stops);
-    this.storageService.add(
+    this.storageService.set(
       STORAGE_KEY.STOPS,
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       stops!.map(stop => ({
@@ -54,16 +54,15 @@ export class ScheduleService {
   }
 
   private getStops(): void {
-    const stopIds = this.storageService.get(STORAGE_KEY.STOPS);
-
-    if (stopIds?.length) {
-      this.ztmAdapter
-        .getStopsWithSchedules(stopIds)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(stops => (this.stops = stops));
-    } else {
-      this.stops = [];
-    }
+    this.storageService
+      .get(STORAGE_KEY.STOPS)
+      .pipe(
+        switchMap(stopIds =>
+          stopIds?.length ? this.ztmAdapter.getStopsWithSchedules(stopIds) : of([])
+        ),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(stops => (this.stops = stops));
   }
 
   addStopByName(stopName: string): void {
