@@ -14,7 +14,7 @@ import { NearbyService } from "./nearby.service";
   providers: [NearbyService]
 })
 export class NearbyComponent implements OnInit {
-  stops$!: Observable<GeolocalizedStop[] | null>;
+  stops$!: Observable<GeolocalizedStop[]>;
 
   constructor(
     readonly nearbyService: NearbyService,
@@ -23,7 +23,7 @@ export class NearbyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.stops$ = this.nearbyService.stops$;
+    this.stops$ = this.nearbyService.getGeolocalizedStops();
 
     this.messagingService.currentMessage
       .pipe(

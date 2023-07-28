@@ -9,8 +9,8 @@ import { BehaviorSubject, Observable, switchMap } from "rxjs";
 
 @Injectable()
 export class NearbyService {
-  private readonly stopsAction = new BehaviorSubject<GeolocalizedStop[] | null>(null);
-  readonly stops$ = this.stopsAction.asObservable();
+  private readonly stopsAction = new BehaviorSubject<GeolocalizedStop[]>([]);
+  private readonly stops$ = this.stopsAction.asObservable();
 
   private searchDistance = DEFAULT_SEARCH_DISTANCE;
 
@@ -21,26 +21,30 @@ export class NearbyService {
     private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef
   ) {
-    this.getGeolocalizedStops();
-    this.time
-      .onMinuteStart()
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.updateStopSchedules());
+    this.init();
   }
 
   private get stops() {
     return this.stopsAction.getValue();
   }
 
-  private set stops(stops: GeolocalizedStop[] | null) {
-    if (!stops?.length) {
+  private set stops(stops: GeolocalizedStop[]) {
+    if (!stops.length) {
       this.stopsAction.next([]);
     }
 
     this.stopsAction.next(stops);
   }
 
-  getGeolocalizedStops(): void {
+  private init() {
+    this.initGeolocalizedStops();
+    this.time
+      .onMinuteStart()
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.updateStopSchedules());
+  }
+
+  private initGeolocalizedStops(): void {
     this.currentLocation
       .pipe(
         switchMap(currentLocation =>
@@ -52,7 +56,7 @@ export class NearbyService {
   }
 
   private updateStopSchedules(): void {
-    const currentStops = this.stops ?? [];
+    const currentStops = this.stops;
 
     this.ztmAdapter
       .getStopsWithSchedules(
@@ -73,17 +77,21 @@ export class NearbyService {
       });
   }
 
+  getGeolocalizedStops(): Observable<GeolocalizedStop[]> {
+    return this.stops$;
+  }
+
   changeSearchDistance(searchDistance: number): void {
     if (searchDistance === this.searchDistance) {
       return;
     }
 
     this.searchDistance = searchDistance;
-    this.getGeolocalizedStops();
+    this.initGeolocalizedStops();
   }
 
   changeStopSchedule(existingStop: GeolocalizedStop, ordinalNumber: string): void {
-    const currentStops = this.stops ?? [];
+    const currentStops = this.stops;
 
     if (existingStop.ordinalNumber === ordinalNumber) {
       return;

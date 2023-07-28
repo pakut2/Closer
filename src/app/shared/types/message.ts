@@ -2,6 +2,7 @@ import { EVENT_NAME } from "@constants";
 
 export type Message =
   | InitialMessage
+  | HttpRequestStatus
   | AddStopMessage
   | StopAddedMessage
   | StopModifiedMessage
@@ -10,6 +11,11 @@ export type Message =
 export interface InitialMessage {
   eventName: typeof EVENT_NAME.INITIAL;
   payload: null;
+}
+
+export interface HttpRequestStatus {
+  eventName: typeof EVENT_NAME.HTTP_REQUEST_STATUS;
+  payload: { inProgress: boolean };
 }
 
 export interface AddStopMessage {

@@ -1,5 +1,5 @@
 <section>
-  <ng-container *ngIf="stops$ | async as stops; else loader">
+  <ng-container *ngIf="stops$ | async as stops">
     <ng-container *ngIf="stops.length; else noStops">
       <ng-container *ngFor="let stop of stops; trackBy: trackStops">
         <app-schedule-stop-card
@@ -12,8 +12,6 @@
 
     <ng-template #noStops><p class="text">There was a stop here. It's gone now.</p></ng-template>
   </ng-container>
-
-  <ng-template #loader><mat-spinner color="accent" diameter="50" /></ng-template>
 
   <div #bottom></div>
 </section>

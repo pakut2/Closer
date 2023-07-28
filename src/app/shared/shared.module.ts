@@ -33,6 +33,7 @@ import {
     MatAutocompleteModule,
     MatIconModule,
     MatMenuModule,
+    MatProgressSpinnerModule,
     MatSnackBarModule,
     ReactiveFormsModule,
     ZtmModule,

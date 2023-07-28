@@ -25,7 +25,7 @@ import { ScheduleService } from "./schedule.service";
 export class ScheduleComponent implements OnInit {
   @ViewChild("bottom") pageBottom!: ElementRef<HTMLDivElement>;
 
-  stops$!: Observable<Stop[] | null>;
+  stops$!: Observable<Stop[]>;
 
   constructor(
     readonly scheduleService: ScheduleService,
@@ -35,7 +35,7 @@ export class ScheduleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.stops$ = this.scheduleService.stops$;
+    this.stops$ = this.scheduleService.getStops();
 
     this.messagingService.currentMessage
       .pipe(

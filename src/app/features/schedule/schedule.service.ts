@@ -11,12 +11,12 @@ import {
 import { Stop, StopNaturalKey } from "@types";
 import { removeDiacritics, Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
-import { BehaviorSubject, of, switchMap } from "rxjs";
+import { BehaviorSubject, Observable, of, switchMap } from "rxjs";
 
 @Injectable()
 export class ScheduleService {
-  private readonly stopsAction = new BehaviorSubject<Stop[] | null>(null);
-  readonly stops$ = this.stopsAction.asObservable();
+  private readonly stopsAction = new BehaviorSubject<Stop[]>([]);
+  private readonly stops$ = this.stopsAction.asObservable();
 
   constructor(
     private readonly ztmAdapter: ZtmAdapter,
@@ -25,19 +25,15 @@ export class ScheduleService {
     private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef
   ) {
-    this.getStops();
-    this.time
-      .onMinuteStart()
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.getStops());
+    this.init();
   }
 
   private get stops() {
     return this.stopsAction.getValue();
   }
 
-  private set stops(stops: Stop[] | null) {
-    if (!stops?.length) {
+  private set stops(stops: Stop[]) {
+    if (!stops.length) {
       this.stopsAction.next([]);
       this.storageService.set(STORAGE_KEY.STOPS, []);
     }
@@ -45,15 +41,22 @@ export class ScheduleService {
     this.stopsAction.next(stops);
     this.storageService.set(
       STORAGE_KEY.STOPS,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      stops!.map(stop => ({
+      stops.map(stop => ({
         name: stop.name,
         ordinalNumber: stop.ordinalNumber
       }))
     );
   }
 
-  private getStops(): void {
+  private init(): void {
+    this.initStops();
+    this.time
+      .onMinuteStart()
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.initStops());
+  }
+
+  private initStops(): void {
     this.storageService
       .get(STORAGE_KEY.STOPS)
       .pipe(
@@ -63,6 +66,10 @@ export class ScheduleService {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(stops => (this.stops = stops));
+  }
+
+  getStops(): Observable<Stop[]> {
+    return this.stops$;
   }
 
   addStopByName(stopName: string): void {
@@ -89,7 +96,7 @@ export class ScheduleService {
   }
 
   changeStopSchedule(existingStop: Stop, ordinalNumber: string): void {
-    const currentStops = this.stops ?? [];
+    const currentStops = this.stops;
 
     if (existingStop.ordinalNumber === ordinalNumber) {
       return;
@@ -123,7 +130,7 @@ export class ScheduleService {
   removeStopByName(stopName: string): void {
     const currentStops = this.stops;
 
-    if (!currentStops?.length) {
+    if (!currentStops.length) {
       return;
     }
 

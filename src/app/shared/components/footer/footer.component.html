@@ -1,4 +1,8 @@
 <footer>
+  <ng-container *ngIf="isLoading">
+    <mat-spinner color="accent" diameter="30" />
+  </ng-container>
+
   <nav>
     <div
       tabindex="0"
