@@ -41,6 +41,9 @@ dependencies:
   '@capacitor/angular':
     specifier: 2.0.3
     version: 2.0.3(@angular-devkit/core@16.1.0)(@angular-devkit/schematics@16.1.0)
+  '@capacitor/app':
+    specifier: 5.0.6
+    version: 5.0.6(@capacitor/core@5.2.2)
   '@capacitor/core':
     specifier: latest
     version: 5.2.2
@@ -1994,6 +1997,14 @@ packages:
       '@angular-devkit/core': 16.1.0(chokidar@3.5.3)
       '@angular-devkit/schematics': 16.1.0
       jsonc-parser: 3.2.0
+    dev: false
+
+  /@capacitor/app@5.0.6(@capacitor/core@5.2.2):
+    resolution: {integrity: sha512-6ZXVdnNmaYILasC/RjQw+yfTmq2ZO7Q3v5lFcDVfq3PFGnybyYQh+RstBrYri+376OmXOXxBD7E6UxBhrMzXGA==}
+    peerDependencies:
+      '@capacitor/core': ^5.0.0
+    dependencies:
+      '@capacitor/core': 5.2.2
     dev: false
 
   /@capacitor/cli@5.2.2:

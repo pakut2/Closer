@@ -1,6 +1,5 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { GeolocationService } from "@core";
 import { ZtmModule } from "@ztm";
 
@@ -11,7 +10,7 @@ import { NearbyStopCardComponent } from "./nearby-stop-card/nearby-stop-card.com
 @NgModule({
   declarations: [NearbyComponent, NearbyStopCardComponent],
   exports: [NearbyStopCardComponent],
-  imports: [CommonModule, MatProgressSpinnerModule, ZtmModule, SharedModule],
+  imports: [CommonModule, ZtmModule, SharedModule],
   providers: [
     {
       provide: "CURRENT_LOCATION",
