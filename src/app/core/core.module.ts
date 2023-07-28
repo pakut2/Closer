@@ -3,10 +3,8 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { ErrorHandler, NgModule } from "@angular/core";
 
 import { GlobalErrorHandler } from "./error";
-import { GeolocationService } from "./geolocation.service";
-import { HttpLoadingInterceptor } from "./http-loading.interceptor";
-import { MessagingService } from "./messaging.service";
-import { StorageService } from "./storage.service";
+import { HttpLoadingInterceptor } from "./interceptors";
+import { GeolocationService, MessagingService, StorageService } from "./services";
 
 @NgModule({
   imports: [CommonModule],

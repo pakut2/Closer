@@ -4,13 +4,13 @@ import { MILLISECONDS_IN_SECOND } from "@constants";
 
 @Injectable({ providedIn: "root" })
 export class Snackbar {
-  private readonly snackbarDurationInSeconds = 2.5;
+  private readonly snackbarDurationInMilliseconds = 2.5 * MILLISECONDS_IN_SECOND;
 
   constructor(private readonly snackbar: MatSnackBar) {}
 
   open(message: string, action = ""): void {
     this.snackbar.open(message, action, {
-      duration: this.snackbarDurationInSeconds * MILLISECONDS_IN_SECOND,
+      duration: this.snackbarDurationInMilliseconds,
       panelClass: "snackbar"
     });
   }

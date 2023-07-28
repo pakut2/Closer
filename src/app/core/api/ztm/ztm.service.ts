@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { StopNotFoundError } from "@core";
 import { Coords } from "@types";
-import { crowDistance, removeDiacritics } from "@utilities";
+import { crowDistance, normalize } from "@utilities";
 import { map, mergeMap, Observable, of, zip } from "rxjs";
 
 import { ZtmConfigService } from "./config";
@@ -46,10 +46,10 @@ export class ZtmService {
   ): Observable<ZtmStopWithRelatedStops> {
     return this.getStops().pipe(
       map(stopsResponse => {
-        const stopNameWithoutDiacritics = removeDiacritics(stopName);
+        const stopNameWithoutDiacritics = normalize(stopName);
 
         const stops = stopsResponse.stops
-          .filter(stop => removeDiacritics(stop.stopName) === stopNameWithoutDiacritics)
+          .filter(stop => normalize(stop.stopName) === stopNameWithoutDiacritics)
           .sort(
             ({ stopCode: stopCode1 }, { stopCode: stopCode2 }) =>
               parseInt(stopCode1) - parseInt(stopCode2)

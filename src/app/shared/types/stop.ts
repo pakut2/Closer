@@ -1,5 +1,10 @@
 import { Coords } from "./coords";
 
+export interface StopNaturalKey {
+  name: string;
+  ordinalNumber: string;
+}
+
 export interface Stop {
   id: string;
   name: string;
@@ -33,9 +38,4 @@ interface GeolocalizedStopMetadata {
 interface StopLocation {
   coords: Coords;
   distance: number;
-}
-
-export interface StopNaturalKey {
-  name: string;
-  ordinalNumber: string;
 }

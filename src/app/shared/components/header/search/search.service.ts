@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { removeDiacritics } from "@utilities";
+import { normalize } from "@utilities";
 import { ZtmAdapter } from "@ztm";
 import { concatMap, map, Observable, startWith } from "rxjs";
 
@@ -23,10 +23,8 @@ export class SearchService {
   }
 
   private filterMatchingStopNames(inputStopName: string, stopNames: string[]): string[] {
-    const stopNameWithoutDiacritics = removeDiacritics(inputStopName);
+    const stopNameWithoutDiacritics = normalize(inputStopName);
 
-    return stopNames.filter(stopName =>
-      removeDiacritics(stopName).includes(stopNameWithoutDiacritics)
-    );
+    return stopNames.filter(stopName => normalize(stopName).includes(stopNameWithoutDiacritics));
   }
 }

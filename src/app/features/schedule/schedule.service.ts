@@ -9,7 +9,7 @@ import {
   StorageService
 } from "@core";
 import { Stop, StopNaturalKey } from "@types";
-import { removeDiacritics, Time } from "@utilities";
+import { normalize, Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
 import { BehaviorSubject, Observable, of, switchMap } from "rxjs";
 
@@ -75,9 +75,9 @@ export class ScheduleService {
   addStopByName(stopName: string): void {
     const currentStops = this.stops ?? [];
 
-    const stopNameWithoutDiacritics = removeDiacritics(stopName);
+    const stopNameWithoutDiacritics = normalize(stopName);
 
-    if (currentStops.some(stop => removeDiacritics(stop.name) === stopNameWithoutDiacritics)) {
+    if (currentStops.some(stop => normalize(stop.name) === stopNameWithoutDiacritics)) {
       throw new StopConflictError(stopName);
     }
 
