@@ -3,7 +3,8 @@ import { Preferences } from "@capacitor/preferences";
 import { from, Observable } from "rxjs";
 
 export const STORAGE_KEY = {
-  STOPS: "stops"
+  STOPS: "stops",
+  SEARCH_DISTANCE: "distance"
 } as const;
 
 type StorageKey = (typeof STORAGE_KEY)[keyof typeof STORAGE_KEY];

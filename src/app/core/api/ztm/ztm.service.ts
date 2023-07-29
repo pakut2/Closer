@@ -46,10 +46,10 @@ export class ZtmService {
   ): Observable<ZtmStopWithRelatedStops> {
     return this.getStops().pipe(
       map(stopsResponse => {
-        const stopNameWithoutDiacritics = normalize(stopName);
+        const normalizedStopName = normalize(stopName);
 
         const stops = stopsResponse.stops
-          .filter(stop => normalize(stop.stopName) === stopNameWithoutDiacritics)
+          .filter(stop => normalize(stop.stopName) === normalizedStopName)
           .sort(
             ({ stopCode: stopCode1 }, { stopCode: stopCode2 }) =>
               parseInt(stopCode1) - parseInt(stopCode2)

@@ -39,9 +39,7 @@ export class ScheduleComponent implements OnInit {
 
     this.messagingService.currentMessage
       .pipe(
-        filter(({ eventName }) =>
-          [EVENT_NAME.ADD_STOP, EVENT_NAME.STOP_ADDED, EVENT_NAME.STOP_MODIFIED].includes(eventName)
-        ),
+        filter(({ eventName }) => [EVENT_NAME.ADD_STOP, EVENT_NAME.STOP_ADDED].includes(eventName)),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(message => {

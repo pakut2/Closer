@@ -23,8 +23,8 @@ export class SearchService {
   }
 
   private filterMatchingStopNames(inputStopName: string, stopNames: string[]): string[] {
-    const stopNameWithoutDiacritics = normalize(inputStopName);
+    const normalizedStopName = normalize(inputStopName);
 
-    return stopNames.filter(stopName => normalize(stopName).includes(stopNameWithoutDiacritics));
+    return stopNames.filter(stopName => normalize(stopName).includes(normalizedStopName));
   }
 }

@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { EVENT_NAME } from "@constants";
 import { finalize, Observable } from "rxjs";
 
-import { MessagingService } from "../services/messaging.service";
+import { MessagingService } from "../services";
 
 @Injectable({ providedIn: "root" })
 export class HttpLoadingInterceptor implements HttpInterceptor {

@@ -1,43 +1,40 @@
 import { DestroyRef, Inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DEFAULT_SEARCH_DISTANCE, EVENT_NAME } from "@constants";
-import { MessagingService, StopNotFoundError } from "@core";
+import { MessagingService, StopNotFoundError, STORAGE_KEY, StorageService } from "@core";
 import { Coords, GeolocalizedStop } from "@types";
 import { Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
-import { BehaviorSubject, Observable, switchMap } from "rxjs";
+import { BehaviorSubject, map, Observable, switchMap, zipWith } from "rxjs";
 
 @Injectable()
 export class NearbyService {
-  private readonly stopsAction = new BehaviorSubject<GeolocalizedStop[]>([]);
-  private readonly stops$ = this.stopsAction.asObservable();
+  private readonly stops$ = new BehaviorSubject<GeolocalizedStop[]>([]);
 
-  private searchDistance = DEFAULT_SEARCH_DISTANCE;
+  private searchDistance?: number;
 
   constructor(
     @Inject("CURRENT_LOCATION") private readonly currentLocation: Observable<Coords>,
     private readonly ztmAdapter: ZtmAdapter,
     private readonly time: Time,
     private readonly messagingService: MessagingService,
-    private readonly destroyRef: DestroyRef
+    private readonly destroyRef: DestroyRef,
+    private readonly storageService: StorageService<{ distance: number }>
   ) {
     this.init();
   }
 
   private get stops() {
-    return this.stopsAction.getValue();
+    return this.stops$.getValue();
   }
 
   private set stops(stops: GeolocalizedStop[]) {
-    if (!stops.length) {
-      this.stopsAction.next([]);
-    }
-
-    this.stopsAction.next(stops);
+    this.stops$.next(stops);
   }
 
-  private init() {
+  private init(): void {
     this.initGeolocalizedStops();
+
     this.time
       .onMinuteStart()
       .pipe(takeUntilDestroyed())
@@ -45,10 +42,35 @@ export class NearbyService {
   }
 
   private initGeolocalizedStops(): void {
-    this.currentLocation
+    const currentSearchDistance = this.searchDistance;
+
+    if (currentSearchDistance) {
+      this.currentLocation
+        .pipe(
+          switchMap(currentLocation =>
+            this.ztmAdapter.getGeolocalizedStopsWithSchedules(
+              currentLocation,
+              currentSearchDistance
+            )
+          ),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe(stops => (this.stops = stops));
+
+      return;
+    }
+
+    this.storageService
+      .get(STORAGE_KEY.SEARCH_DISTANCE)
       .pipe(
-        switchMap(currentLocation =>
-          this.ztmAdapter.getGeolocalizedStopsWithSchedules(currentLocation, this.searchDistance)
+        map(storageSearchDistance => {
+          this.searchDistance = storageSearchDistance?.distance ?? DEFAULT_SEARCH_DISTANCE;
+
+          return this.searchDistance;
+        }),
+        zipWith(this.currentLocation),
+        switchMap(([currentSearchDistance, currentLocation]) =>
+          this.ztmAdapter.getGeolocalizedStopsWithSchedules(currentLocation, currentSearchDistance)
         ),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -81,12 +103,14 @@ export class NearbyService {
     return this.stops$;
   }
 
-  changeSearchDistance(searchDistance: number): void {
-    if (searchDistance === this.searchDistance) {
+  changeSearchDistance(newSearchDistance: number): void {
+    if (newSearchDistance === this.searchDistance) {
       return;
     }
 
-    this.searchDistance = searchDistance;
+    this.searchDistance = newSearchDistance;
+    this.storageService.set(STORAGE_KEY.SEARCH_DISTANCE, { distance: newSearchDistance });
+
     this.initGeolocalizedStops();
   }
 

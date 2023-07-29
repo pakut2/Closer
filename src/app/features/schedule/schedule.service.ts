@@ -15,8 +15,7 @@ import { BehaviorSubject, Observable, of, switchMap } from "rxjs";
 
 @Injectable()
 export class ScheduleService {
-  private readonly stopsAction = new BehaviorSubject<Stop[]>([]);
-  private readonly stops$ = this.stopsAction.asObservable();
+  private readonly stops$ = new BehaviorSubject<Stop[]>([]);
 
   constructor(
     private readonly ztmAdapter: ZtmAdapter,
@@ -29,16 +28,12 @@ export class ScheduleService {
   }
 
   private get stops() {
-    return this.stopsAction.getValue();
+    return this.stops$.getValue();
   }
 
   private set stops(stops: Stop[]) {
-    if (!stops.length) {
-      this.stopsAction.next([]);
-      this.storageService.set(STORAGE_KEY.STOPS, []);
-    }
+    this.stops$.next(stops);
 
-    this.stopsAction.next(stops);
     this.storageService.set(
       STORAGE_KEY.STOPS,
       stops.map(stop => ({
@@ -50,6 +45,7 @@ export class ScheduleService {
 
   private init(): void {
     this.initStops();
+
     this.time
       .onMinuteStart()
       .pipe(takeUntilDestroyed())
@@ -75,9 +71,9 @@ export class ScheduleService {
   addStopByName(stopName: string): void {
     const currentStops = this.stops ?? [];
 
-    const stopNameWithoutDiacritics = normalize(stopName);
+    const normalizedStopName = normalize(stopName);
 
-    if (currentStops.some(stop => normalize(stop.name) === stopNameWithoutDiacritics)) {
+    if (currentStops.some(stop => normalize(stop.name) === normalizedStopName)) {
       throw new StopConflictError(stopName);
     }
 
