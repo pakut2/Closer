@@ -2,10 +2,7 @@
   <ng-container *ngIf="stops$ | async as stops">
     <ng-container *ngIf="stops.length; else noStops">
       <ng-container *ngFor="let stop of stops">
-        <app-nearby-stop-card
-          [stop]="stop"
-          (changeSchedule)="this.nearbyService.changeStopSchedule(stop, $event)"
-        />
+        <app-nearby-stop-card [stop]="stop" (changeSchedule)="onScheduleUpdate($event, stop)" />
       </ng-container>
     </ng-container>
 

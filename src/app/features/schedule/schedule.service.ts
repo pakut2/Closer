@@ -1,3 +1,4 @@
+import { moveItemInArray } from "@angular/cdk/drag-drop";
 import { DestroyRef, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { BASE_ORDINAL_NUMBER, EVENT_NAME } from "@constants";
@@ -69,7 +70,7 @@ export class ScheduleService {
   }
 
   addStopByName(stopName: string): void {
-    const currentStops = this.stops ?? [];
+    const currentStops = this.stops;
 
     const normalizedStopName = normalize(stopName);
 
@@ -81,17 +82,13 @@ export class ScheduleService {
       .getStopWithSchedules({ name: stopName, ordinalNumber: BASE_ORDINAL_NUMBER })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(newStop => {
-        if (currentStops.length) {
-          this.stops = [...currentStops, newStop];
-        } else {
-          this.stops = [newStop];
-        }
+        this.stops = [...currentStops, newStop];
 
         this.messagingService.sendMessage({ eventName: EVENT_NAME.STOP_ADDED, payload: null });
       });
   }
 
-  changeStopSchedule(existingStop: Stop, ordinalNumber: string): void {
+  changeStopSchedule(ordinalNumber: string, existingStop: Stop): void {
     const currentStops = this.stops;
 
     if (existingStop.ordinalNumber === ordinalNumber) {
@@ -131,5 +128,25 @@ export class ScheduleService {
     }
 
     this.stops = currentStops.filter(stop => stop.name !== stopName);
+  }
+
+  reorderStops(previousIndex: number, currentIndex: number): void {
+    if (previousIndex === currentIndex) {
+      return;
+    }
+
+    const currentStops = this.stops;
+    const movedStop = currentStops[previousIndex];
+
+    moveItemInArray(currentStops, previousIndex, currentIndex);
+
+    this.stops = currentStops;
+
+    setTimeout(() =>
+      this.messagingService.sendMessage({
+        eventName: EVENT_NAME.STOP_MODIFIED,
+        payload: { stopName: movedStop.name }
+      })
+    );
   }
 }

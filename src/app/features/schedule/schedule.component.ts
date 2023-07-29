@@ -1,3 +1,4 @@
+import { CdkDragDrop } from "@angular/cdk/drag-drop";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -48,7 +49,7 @@ export class ScheduleComponent implements OnInit {
             return this.scheduleService.addStopByName(message.payload.stopName);
           }
           case EVENT_NAME.STOP_ADDED: {
-            return setTimeout(() => this.scroll.scrollToElement(this.pageBottom));
+            return setTimeout(() => this.scroll.verticalScrollToElement(this.pageBottom));
           }
         }
       });
@@ -56,5 +57,17 @@ export class ScheduleComponent implements OnInit {
 
   trackStops(index: number, stop: Stop): string {
     return stop.id;
+  }
+
+  onScheduleUpdate(ordinalNumber: string, stop: Stop): void {
+    this.scheduleService.changeStopSchedule(ordinalNumber, stop);
+  }
+
+  onStopRemove(stopName: string): void {
+    this.scheduleService.removeStopByName(stopName);
+  }
+
+  onStopCardDrop(dropEvent: CdkDragDrop<Stop[]>): void {
+    this.scheduleService.reorderStops(dropEvent.previousIndex, dropEvent.currentIndex);
   }
 }

@@ -27,7 +27,3 @@
     transform: scale(0.9);
   }
 }
-
-.blinker {
-  @include animate(blinker, 1s, linear, infinite);
-}

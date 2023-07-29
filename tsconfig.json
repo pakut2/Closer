@@ -21,10 +21,11 @@
     "skipLibCheck": true,
     "lib": ["ES2022", "dom"],
     "paths": {
-      "@core": ["./src/app/core/index.ts"],
-      "@constants": ["./src/app/shared/constants.ts"],
       "@components": ["./src/app/shared/components/index.ts"],
+      "@constants": ["./src/app/shared/constants.ts"],
+      "@core": ["./src/app/core/index.ts"],
       "@features": ["./src/app/features/index.ts"],
+      "@shared": ["./src/app/shared/shared.module.ts"],
       "@types": ["./src/app/shared/types/index.ts"],
       "@utilities": ["./src/app/shared/utilities/index.ts"],
       "@ztm": ["./src/app/core/api/ztm/index.ts"]

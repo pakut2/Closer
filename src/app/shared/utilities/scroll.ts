@@ -2,20 +2,27 @@ import { ElementRef, Injectable } from "@angular/core";
 
 @Injectable({ providedIn: "root" })
 export class Scroll {
-  scrollToElement<T extends HTMLElement>(element: ElementRef<T>): void {
-    if (this.isElementInViewport(element)) {
+  private readonly headerOffset = document.getElementsByTagName("header")[0]?.offsetHeight ?? 0;
+  private readonly footerOffset =
+    document.getElementsByTagName("footer")[0]?.offsetTop ?? window.innerHeight;
+
+  verticalScrollToElement<T extends HTMLElement>(element: ElementRef<T>): void {
+    if (this.isElementInVerticalViewport(element)) {
       return;
     }
 
-    element.nativeElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    window.scroll({
+      top: element.nativeElement.offsetTop - this.headerOffset,
+      left: 0,
+      behavior: "smooth"
+    });
   }
 
-  private isElementInViewport<T extends HTMLElement>(element: ElementRef<T>): boolean {
+  private isElementInVerticalViewport<T extends HTMLElement>(element: ElementRef<T>): boolean {
     const elementDimensions = element.nativeElement.getBoundingClientRect();
 
     return (
-      elementDimensions.top >= 0 &&
-      elementDimensions.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+      elementDimensions.top >= this.headerOffset && elementDimensions.bottom <= this.footerOffset
     );
   }
 }

@@ -1,8 +1,16 @@
 @use "common";
 @use "components/stop-card";
+@import "animations";
+@import "variables";
 
 .slide-right {
   transform: translateX(8rem);
   opacity: 0;
-  transition: all 0.3s ease;
+
+  @include transition(all, 0.3s, ease);
+}
+
+.dragging {
+  z-index: $overlay-content-z-index !important;
+  opacity: 0.5;
 }

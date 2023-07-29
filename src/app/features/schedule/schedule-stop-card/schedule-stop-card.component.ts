@@ -48,6 +48,6 @@ export class ScheduleStopCardComponent implements OnInit {
         ),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(() => this.scroll.scrollToElement(this.element));
+      .subscribe(() => this.scroll.verticalScrollToElement(this.element));
   }
 }

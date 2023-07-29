@@ -1,13 +1,16 @@
 <section>
   <ng-container *ngIf="stops$ | async as stops">
     <ng-container *ngIf="stops.length; else noStops">
-      <ng-container *ngFor="let stop of stops; trackBy: trackStops">
-        <app-schedule-stop-card
-          [stop]="stop"
-          (changeSchedule)="scheduleService.changeStopSchedule(stop, $event)"
-          (remove)="scheduleService.removeStopByName(stop.name)"
-        />
-      </ng-container>
+      <div cdkDropList cdkDropListAutoScrollStep="20" (cdkDropListDropped)="onStopCardDrop($event)">
+        <ng-container *ngFor="let stop of stops; trackBy: trackStops">
+          <app-schedule-stop-card
+            class="stop-card"
+            [stop]="stop"
+            (changeSchedule)="onScheduleUpdate($event, stop)"
+            (remove)="onStopRemove(stop.name)"
+          />
+        </ng-container>
+      </div>
     </ng-container>
 
     <ng-template #noStops><p class="text">There was a stop here. It's gone now.</p></ng-template>

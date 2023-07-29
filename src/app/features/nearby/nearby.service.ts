@@ -114,7 +114,7 @@ export class NearbyService {
     this.initGeolocalizedStops();
   }
 
-  changeStopSchedule(existingStop: GeolocalizedStop, ordinalNumber: string): void {
+  changeStopSchedule(ordinalNumber: string, existingStop: GeolocalizedStop): void {
     const currentStops = this.stops;
 
     if (existingStop.ordinalNumber === ordinalNumber) {

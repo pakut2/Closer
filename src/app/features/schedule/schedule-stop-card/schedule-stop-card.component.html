@@ -1,17 +1,19 @@
-<section [class.slide-right]="removeAnimationActive" (transitionend)="remove.emit()">
-  <div class="card-header">
-    <span>
-      {{ stop.name }}
-      <app-labeled-menu
-        [label]="stop.ordinalNumber"
-        [menuItems]="relatedStopOrdinalNumbers"
-        (selected)="changeSchedule.emit($event)"
-      />
-    </span>
+<div cdkDrag cdkDragLockAxis="y" cdkDragPreviewClass="dragging" [cdkDragStartDelay]="100">
+  <section [class.slide-right]="removeAnimationActive" (transitionend)="remove.emit()">
+    <div cdkDragHandle class="card-header">
+      <span>
+        {{ stop.name }}
+        <app-labeled-menu
+          [label]="stop.ordinalNumber"
+          [menuItems]="relatedStopOrdinalNumbers"
+          (selected)="changeSchedule.emit($event)"
+        />
+      </span>
 
-    <mat-icon fontIcon="close" class="button" (click)="removeAnimationActive = true" />
-  </div>
-  <div class="card-body">
-    <app-stop-schedule-list [schedules]="stop.schedules" />
-  </div>
-</section>
+      <mat-icon fontIcon="close" class="button" (click)="removeAnimationActive = true" />
+    </div>
+    <div class="card-body">
+      <app-stop-schedule-list [schedules]="stop.schedules" />
+    </div>
+  </section>
+</div>

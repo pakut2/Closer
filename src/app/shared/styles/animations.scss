@@ -2,8 +2,16 @@
   animation: $name $duration $timing $count;
 }
 
+@mixin transition($name, $duration, $function) {
+  transition: $name $duration $function;
+}
+
 @keyframes blinker {
   50% {
     opacity: 0;
   }
+}
+
+.blinker {
+  @include animate(blinker, 1s, linear, infinite);
 }

@@ -1,9 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { GeolocationService } from "@core";
+import { SharedModule } from "@shared";
 import { ZtmModule } from "@ztm";
 
-import { SharedModule } from "../../shared/shared.module";
 import { NearbyComponent } from "./nearby.component";
 import { NearbyStopCardComponent } from "./nearby-stop-card/nearby-stop-card.component";
 
