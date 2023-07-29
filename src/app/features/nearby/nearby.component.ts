@@ -37,6 +37,10 @@ export class NearbyComponent implements OnInit {
       );
   }
 
+  trackStops(index: number, stop: GeolocalizedStop): string {
+    return stop.id;
+  }
+
   onScheduleUpdate(ordinalNumber: string, stop: GeolocalizedStop): void {
     this.nearbyService.changeStopSchedule(ordinalNumber, stop);
   }

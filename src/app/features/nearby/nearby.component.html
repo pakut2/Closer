@@ -1,7 +1,7 @@
 <section>
   <ng-container *ngIf="stops$ | async as stops">
     <ng-container *ngIf="stops.length; else noStops">
-      <ng-container *ngFor="let stop of stops">
+      <ng-container *ngFor="let stop of stops; trackBy: trackStops">
         <app-nearby-stop-card [stop]="stop" (changeSchedule)="onScheduleUpdate($event, stop)" />
       </ng-container>
     </ng-container>
