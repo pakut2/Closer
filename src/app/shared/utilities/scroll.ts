@@ -2,9 +2,10 @@ import { ElementRef, Injectable } from "@angular/core";
 
 @Injectable({ providedIn: "root" })
 export class Scroll {
-  private readonly headerOffset = document.getElementsByTagName("header")[0]?.offsetHeight ?? 0;
-  private readonly footerOffset =
-    document.getElementsByTagName("footer")[0]?.offsetTop ?? window.innerHeight;
+  private readonly headerOffset =
+    document.getElementsByTagName("header")[0].offsetHeight +
+    parseFloat(getComputedStyle(document.documentElement).fontSize);
+  private readonly footerOffset = document.getElementsByTagName("footer")[0].offsetTop;
 
   verticalScrollToElement<T extends HTMLElement>(element: ElementRef<T>): void {
     if (this.isElementInVerticalViewport(element)) {

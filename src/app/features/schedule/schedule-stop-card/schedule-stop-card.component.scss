@@ -3,6 +3,10 @@
 @import "animations";
 @import "variables";
 
+.card-header {
+  touch-action: auto !important;
+}
+
 .slide-right {
   transform: translateX(8rem);
   opacity: 0;

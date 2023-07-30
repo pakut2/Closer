@@ -6,11 +6,13 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  Output
+  Output,
+  ViewChild
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { EVENT_NAME } from "@constants";
-import { MessagingService } from "@core";
+import { MatRipple } from "@angular/material/core";
+import { EVENT_NAME, STOP_CARD_DRAG_DELAY } from "@constants";
+import { HapticService, MessagingService } from "@core";
 import { Stop } from "@types";
 import { Scroll } from "@utilities";
 import { filter } from "rxjs";
@@ -22,10 +24,13 @@ import { filter } from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScheduleStopCardComponent implements OnInit {
+  @ViewChild(MatRipple) ripple!: MatRipple;
+
   @Input() stop!: Stop;
   @Output() changeSchedule = new EventEmitter<string>();
   @Output() remove = new EventEmitter<never>();
 
+  readonly dragDelay = STOP_CARD_DRAG_DELAY;
   relatedStopOrdinalNumbers!: string[];
   removeAnimationActive = false;
 
@@ -33,7 +38,8 @@ export class ScheduleStopCardComponent implements OnInit {
     private readonly element: ElementRef,
     private readonly scroll: Scroll,
     private readonly messagingService: MessagingService,
-    private readonly destroyRef: DestroyRef
+    private readonly destroyRef: DestroyRef,
+    private readonly hapticService: HapticService
   ) {}
 
   ngOnInit(): void {
@@ -49,5 +55,19 @@ export class ScheduleStopCardComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => this.scroll.verticalScrollToElement(this.element));
+  }
+
+  onDragStart(): void {
+    this.hapticService.lightVibration();
+  }
+
+  onStopChange(ordinalNumber: string): void {
+    this.changeSchedule.emit(ordinalNumber);
+  }
+
+  onRemove(transitionEvent: TransitionEvent): void {
+    if ((transitionEvent.target as HTMLElement).classList.contains("slide-right")) {
+      this.remove.emit();
+    }
   }
 }

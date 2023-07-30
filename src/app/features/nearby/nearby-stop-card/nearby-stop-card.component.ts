@@ -49,4 +49,8 @@ export class NearbyStopCardComponent implements OnInit {
       )
       .subscribe(() => this.scroll.verticalScrollToElement(this.element));
   }
+
+  onStopChange(ordinalNumber: string): void {
+    this.changeSchedule.emit(ordinalNumber);
+  }
 }
