@@ -1,0 +1,69 @@
+name: build
+on:
+  push:
+    branches:
+      - main
+
+env:
+  HUSKY: 0
+
+jobs:
+  release:
+    name: Build Android and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install pnpm
+        run: npm i -g pnpm
+
+      - name: Install Dependencies
+        run: pnpm i
+
+      - name: Build Web Application
+        run: pnpm build
+
+      - name: Copy Web Assets
+        run: npx cap copy
+
+      - name: Update Native Dependencies
+        run: npx cap update
+
+      - name: Build Native Bundle
+        run: cd android && ./gradlew bundle && ./gradlew assembleDebug
+
+      - name: Extract Android Signing Key
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" > android/release.jks.base64
+          base64 -d android/release.jks.base64 > android/release.decrypted.jks
+
+      - name: Sign Build
+        run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/app-release-signed.aab ./android/app/build/outputs/bundle/release/app-release.aab release
+
+      - name: Get Current Version
+        id: version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Release
+        shell: bash
+        run: |
+          hub release create ${{ steps.version.outputs.current-version }} \
+          -m ${{ steps.version.outputs.current-version }} \
+          -a ./android/app/build/outputs/bundle/release/app-release-signed.aab \
+          -a ./android/app/build/outputs/apk/debug/app-debug.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
