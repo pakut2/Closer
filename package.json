@@ -51,6 +51,7 @@
     "@angular-eslint/template-parser": "16.0.3",
     "@angular/cli": "~16.1.0",
     "@angular/compiler-cli": "^16.1.0",
+    "@capacitor/assets": "^2.0.4",
     "@capacitor/cli": "^5.2.2",
     "@total-typescript/ts-reset": "^0.4.2",
     "@types/jasmine": "~4.3.0",
