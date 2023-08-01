@@ -18,6 +18,7 @@ import {
   Snackbar,
   StopScheduleListComponent
 } from "./components";
+import { PullToRefreshDirective } from "./directives";
 
 @NgModule({
   declarations: [
@@ -25,9 +26,16 @@ import {
     SearchComponent,
     FooterComponent,
     StopScheduleListComponent,
-    LabeledMenuComponent
+    LabeledMenuComponent,
+    PullToRefreshDirective
   ],
-  exports: [HeaderComponent, FooterComponent, LabeledMenuComponent, StopScheduleListComponent],
+  exports: [
+    HeaderComponent,
+    FooterComponent,
+    LabeledMenuComponent,
+    StopScheduleListComponent,
+    PullToRefreshDirective
+  ],
   imports: [
     CommonModule,
     MatAutocompleteModule,
