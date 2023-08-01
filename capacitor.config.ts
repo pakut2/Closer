@@ -7,5 +7,10 @@ export default {
   server: {
     url: process.env["ANGULAR_APP_LOCAL_URL"],
     cleartext: true
+  },
+  plugins: {
+    CapacitorHttp: {
+      enabled: true
+    }
   }
 } satisfies CapacitorConfig;
