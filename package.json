@@ -1,6 +1,6 @@
 {
   "name": "closer",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "engines": {
     "node": ">=18.15.0",
     "pnpm": ">=8.6.3"
