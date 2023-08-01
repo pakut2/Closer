@@ -73,8 +73,6 @@ export class ZtmAdapter {
 
     const timeRemaining = this.time.minuteDifference(currentIsoDate, targetIsoDate);
 
-    // console.log(currentIsoDate, targetTime, timeRemaining);
-
     return timeRemaining > 0 ? `${timeRemaining} min` : ">>>";
   }
 
