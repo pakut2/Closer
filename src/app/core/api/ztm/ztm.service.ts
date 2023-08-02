@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { StopNotFoundError } from "@core";
 import { Coords } from "@types";
 import { crowDistance, normalize } from "@utilities";
-import { map, mergeMap, Observable, of, shareReplay, zip } from "rxjs";
+import { map, mergeMap, Observable, of, zip } from "rxjs";
 
 import { ZtmConfigService } from "./config";
 import {
@@ -19,6 +19,8 @@ import {
 
 @Injectable({ providedIn: "root" })
 export class ZtmService {
+  private stops?: Observable<ZtmStopsResponse>;
+
   constructor(
     private readonly httpClient: HttpClient,
     private readonly configService: ZtmConfigService
@@ -68,13 +70,16 @@ export class ZtmService {
   }
 
   getStops(): Observable<ZtmStopsResponse> {
-    return this.httpClient.get<ZtmStopsResponse>(this.configService.stopsEndpointUrl).pipe(
-      map(stopsResponse => ({
-        ...stopsResponse,
-        stops: stopsResponse.stops.filter(stop => stop.zoneId === URBAN_ZONE_ID)
-      })),
-      shareReplay()
-    );
+    if (!this.stops) {
+      this.stops = this.httpClient.get<ZtmStopsResponse>(this.configService.stopsEndpointUrl).pipe(
+        map(stopsResponse => ({
+          ...stopsResponse,
+          stops: stopsResponse.stops.filter(stop => stop.zoneId === URBAN_ZONE_ID)
+        }))
+      );
+    }
+
+    return this.stops;
   }
 
   getGeolocalizedStopsWithSchedules(

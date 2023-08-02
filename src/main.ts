@@ -11,6 +11,16 @@ CapacitorApp.addListener("backButton", ({ canGoBack }) => {
   }
 });
 
+let wasAppActive = true;
+
+CapacitorApp.addListener("appStateChange", ({ isActive }) => {
+  if (!wasAppActive && isActive) {
+    location.reload();
+  }
+
+  wasAppActive = isActive;
+});
+
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
   // eslint-disable-next-line no-console

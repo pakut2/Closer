@@ -5,7 +5,7 @@ import { MessagingService, StopNotFoundError, STORAGE_KEY, StorageService } from
 import { Coords, GeolocalizedStop } from "@types";
 import { Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
-import { BehaviorSubject, map, Observable, switchMap, zipWith } from "rxjs";
+import { BehaviorSubject, filter, map, Observable, switchMap, zipWith } from "rxjs";
 
 @Injectable()
 export class NearbyService {
@@ -37,8 +37,15 @@ export class NearbyService {
 
     this.time
       .onMinuteStart()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.updateStopSchedules());
+
+    this.messagingService.currentMessage
+      .pipe(
+        filter(({ eventName }) => eventName === EVENT_NAME.REFRESH_STOPS),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.initGeolocalizedStops());
   }
 
   private initGeolocalizedStops(): void {

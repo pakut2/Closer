@@ -6,7 +6,8 @@ export type Message =
   | AddStopMessage
   | StopAddedMessage
   | StopModifiedMessage
-  | ChangeSearchDistanceMessage;
+  | ChangeSearchDistanceMessage
+  | RefreshStopsMessage;
 
 export interface InitialMessage {
   eventName: typeof EVENT_NAME.INITIAL;
@@ -36,4 +37,9 @@ export interface StopModifiedMessage {
 export interface ChangeSearchDistanceMessage {
   eventName: typeof EVENT_NAME.CHANGE_SEARCH_DISTANCE;
   payload: { searchDistance: number };
+}
+
+export interface RefreshStopsMessage {
+  eventName: typeof EVENT_NAME.REFRESH_STOPS;
+  payload: null;
 }

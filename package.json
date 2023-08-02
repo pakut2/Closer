@@ -5,6 +5,13 @@
     "node": ">=18.15.0",
     "pnpm": ">=8.6.3"
   },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "Firefox ESR",
+    "not dead",
+    "not IE 9-11"
+  ],
   "scripts": {
     "prepare": "if [ \"$HUSKY\" != 0 ]; then husky install; fi",
     "ng": "ng",

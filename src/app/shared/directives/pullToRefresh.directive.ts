@@ -1,4 +1,6 @@
 import { Directive, HostListener } from "@angular/core";
+import { EVENT_NAME } from "@constants";
+import { MessagingService } from "@core";
 
 @Directive({
   selector: "[appPullToRefresh]"
@@ -7,6 +9,8 @@ export class PullToRefreshDirective {
   private readonly refreshHeightThreshold = 300;
   private initialTouchHeight = 0;
   private shouldRefresh = false;
+
+  constructor(private readonly messagingService: MessagingService) {}
 
   @HostListener("touchstart", ["$event"])
   onTouchStart(touchEvent: TouchEvent): void {
@@ -36,7 +40,9 @@ export class PullToRefreshDirective {
   @HostListener("touchend")
   onTouchEnd(): void {
     if (this.shouldRefresh) {
-      location.reload();
+      this.messagingService.sendMessage({ eventName: EVENT_NAME.REFRESH_STOPS, payload: null });
+
+      this.shouldRefresh = false;
     }
   }
 }

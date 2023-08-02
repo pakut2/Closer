@@ -12,7 +12,7 @@ import {
 import { Stop, StopNaturalKey } from "@types";
 import { normalize, Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
-import { BehaviorSubject, Observable, of, switchMap } from "rxjs";
+import { BehaviorSubject, filter, Observable, of, switchMap } from "rxjs";
 
 @Injectable()
 export class ScheduleService {
@@ -49,7 +49,14 @@ export class ScheduleService {
 
     this.time
       .onMinuteStart()
-      .pipe(takeUntilDestroyed())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.initStops());
+
+    this.messagingService.currentMessage
+      .pipe(
+        filter(({ eventName }) => eventName === EVENT_NAME.REFRESH_STOPS),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => this.initStops());
   }
 
