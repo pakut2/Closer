@@ -1,7 +1,11 @@
 <footer>
-  <ng-container *ngIf="isLoading">
+  <ng-container *ngIf="isLoading && refreshProgress === 0; else refreshSpinner">
     <mat-spinner color="accent" diameter="30" />
   </ng-container>
+
+  <ng-template #refreshSpinner>
+    <mat-progress-spinner color="accent" diameter="30" [value]="refreshProgress" />
+  </ng-template>
 
   <nav>
     <div

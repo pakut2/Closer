@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { StopNotFoundError } from "@core";
 import { Coords } from "@types";
 import { crowDistance, normalize } from "@utilities";
-import { map, mergeMap, Observable, of, zip } from "rxjs";
+import { map, mergeMap, Observable, of, shareReplay, zip } from "rxjs";
 
 import { ZtmConfigService } from "./config";
 import {
@@ -75,7 +75,8 @@ export class ZtmService {
         map(stopsResponse => ({
           ...stopsResponse,
           stops: stopsResponse.stops.filter(stop => stop.zoneId === URBAN_ZONE_ID)
-        }))
+        })),
+        shareReplay()
       );
     }
 

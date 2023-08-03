@@ -1,5 +1,5 @@
 <app-header />
 
-<main appPullToRefresh><router-outlet /></main>
+<main appPullToRefresh (refreshProgress)="refreshProgress = $event"><router-outlet /></main>
 
-<app-footer />
+<app-footer [refreshProgress]="refreshProgress" />

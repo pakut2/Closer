@@ -10,7 +10,8 @@ footer {
   background: $dark-color;
   font-family: Montserrat, sans-serif;
 
-  mat-spinner {
+  mat-spinner,
+  mat-progress-spinner {
     position: absolute;
     left: 0;
     bottom: 0;

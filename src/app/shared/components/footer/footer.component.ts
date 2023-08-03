@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from "@angular/core";
+import { Component, DestroyRef, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
@@ -11,6 +11,8 @@ import { filter } from "rxjs";
   styleUrls: ["./footer.component.scss"]
 })
 export class FooterComponent implements OnInit {
+  @Input() refreshProgress = 0;
+
   isLoading = false;
 
   constructor(

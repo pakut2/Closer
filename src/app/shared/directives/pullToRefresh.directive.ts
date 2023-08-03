@@ -1,4 +1,4 @@
-import { Directive, HostListener } from "@angular/core";
+import { Directive, EventEmitter, HostListener, Output } from "@angular/core";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
 
@@ -6,8 +6,10 @@ import { MessagingService } from "@core";
   selector: "[appPullToRefresh]"
 })
 export class PullToRefreshDirective {
-  private readonly refreshHeightThreshold = 300;
-  private initialTouchHeight = 0;
+  @Output() refreshProgress = new EventEmitter<number>();
+
+  private readonly refreshGestureHeightThreshold = 50;
+  private initialTouch: { height: number; wasFromPageTop: boolean } | null = null;
   private shouldRefresh = false;
 
   constructor(private readonly messagingService: MessagingService) {}
@@ -20,11 +22,15 @@ export class PullToRefreshDirective {
       return;
     }
 
-    this.initialTouchHeight = initialTouch.clientY;
+    this.initialTouch = { height: initialTouch.clientY, wasFromPageTop: this.isFullyScrolledUp() };
   }
 
   @HostListener("touchmove", ["$event"])
   onTouchMove(touchEvent: TouchEvent): void {
+    if (!this.initialTouch || !this.initialTouch.wasFromPageTop) {
+      return;
+    }
+
     const touch = touchEvent.touches[0];
 
     if (!touch) {
@@ -32,17 +38,48 @@ export class PullToRefreshDirective {
     }
 
     const touchHeight = touch.clientY;
-    const swipeHeight = touchHeight - this.initialTouchHeight;
+    const swipeHeight = touchHeight - this.initialTouch.height;
 
-    this.shouldRefresh = swipeHeight > this.refreshHeightThreshold && window.scrollY === 0;
+    const refreshProgress = this.isFullyScrolledUp()
+      ? Math.min(Number((swipeHeight / this.refreshGestureHeightThreshold).toFixed(1)) * 100, 100)
+      : 0;
+
+    if (refreshProgress > 0) {
+      this.togglePageScrolling(false);
+    }
+
+    this.refreshProgress.emit(refreshProgress);
+
+    this.shouldRefresh = this.isRefreshGestureComplete(refreshProgress);
   }
 
   @HostListener("touchend")
   onTouchEnd(): void {
+    this.refreshProgress.emit(0);
+    this.togglePageScrolling(true);
+
     if (this.shouldRefresh) {
       this.messagingService.sendMessage({ eventName: EVENT_NAME.REFRESH_STOPS, payload: null });
 
       this.shouldRefresh = false;
+    }
+  }
+
+  private isFullyScrolledUp(): boolean {
+    return window.scrollY < 5;
+  }
+
+  private isRefreshGestureComplete(refreshProgress: number): boolean {
+    return refreshProgress === 100;
+  }
+
+  private togglePageScrolling(scrollingEnabled: boolean): void {
+    if (scrollingEnabled) {
+      document.documentElement.style.overflow = "visible";
+      document.body.style.overflow = "visible";
+    } else {
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
     }
   }
 }
