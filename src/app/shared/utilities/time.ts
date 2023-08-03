@@ -9,8 +9,8 @@ export class Time {
   private readonly millisecondsInMinute = this.secondsInMinute * MILLISECONDS_IN_SECOND;
 
   minuteDifference(currentDate: string, targetDate: string): number {
-    const currentDateTime = DateTime.fromISO(currentDate);
-    let targetDateTime = DateTime.fromISO(targetDate);
+    const currentDateTime = DateTime.fromISO(currentDate).toUTC();
+    let targetDateTime = DateTime.fromISO(targetDate).toUTC();
 
     if (currentDateTime.hour !== 0 && targetDateTime.hour === 0) {
       targetDateTime = targetDateTime.plus({ days: 1 });
