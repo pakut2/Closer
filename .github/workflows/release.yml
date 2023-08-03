@@ -67,6 +67,7 @@ jobs:
           tag: ${{ steps.version-bump.outputs.newTag }}
           includeInvalidCommits: true
           writeToFile: false
+          reverseOrder: true
           token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Create Release
