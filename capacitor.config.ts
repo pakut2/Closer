@@ -5,7 +5,7 @@ export default {
   appName: "Closer",
   webDir: "dist/closer",
   server: {
-    url: process.env["ANGULAR_APP_LOCAL_URL"],
+    url: process.env["NG_APP_LOCAL_URL"],
     cleartext: true
   },
   plugins: {

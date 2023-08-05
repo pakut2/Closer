@@ -5,6 +5,8 @@ on:
       - main
 
 env:
+  NG_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   HUSKY: 0
 
 jobs:
@@ -36,8 +38,24 @@ jobs:
       - name: Install Dependencies
         run: pnpm i
 
+      - name: Bump Build Version
+        id: version-bump-build
+        uses: "phips28/gh-action-bump-version@master"
+        with:
+          skip-commit: true
+          skip-tag: true
+          skip-push: true
+
+      - name: Set Build Version
+        run: |
+          echo "NG_APP_VERSION=${{ steps.version-bump-build.outputs.newTag }}" >> "$GITHUB_ENV"
+          git restore package.json
+
       - name: Build Web Application
-        run: pnpm build
+        run: pnpm build:prod
+
+      - name: Generate Sentry Source Maps
+        run: pnpm sentry:sourcemaps
 
       - name: Copy Web Assets
         run: npx cap copy
@@ -56,15 +74,15 @@ jobs:
       - name: Sign Build
         run: jarsigner -keystore android/release.decrypted.jks -storepass "${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" -signedjar ./android/app/build/outputs/bundle/release/app-release-signed.aab ./android/app/build/outputs/bundle/release/app-release.aab release
 
-      - name: Bump Version
-        id: version-bump
+      - name: Bump Release Version
+        id: version-bump-release
         uses: "phips28/gh-action-bump-version@master"
 
       - name: Generate Changelog
         id: changelog
         uses: requarks/changelog-action@v1
         with:
-          tag: ${{ steps.version-bump.outputs.newTag }}
+          tag: ${{ steps.version-bump-release.outputs.newTag }}
           includeInvalidCommits: true
           writeToFile: false
           reverseOrder: true
@@ -73,7 +91,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
         with:
-          tag: ${{ steps.version-bump.outputs.newTag }}
+          tag: ${{ steps.version-bump-release.outputs.newTag }}
           body: ${{ steps.changelog.outputs.changes }}
           artifacts: android/app/build/outputs/bundle/release/app-release-signed.aab,android/app/build/outputs/apk/debug/app-debug.apk
           token: ${{ secrets.ACCESS_TOKEN }}

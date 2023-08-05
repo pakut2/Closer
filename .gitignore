@@ -43,3 +43,6 @@ Thumbs.db
 
 .env
 android/release.jks
+
+# Sentry Auth Token
+.sentryclirc

@@ -24,6 +24,7 @@
       "@components": ["./src/app/shared/components/index.ts"],
       "@constants": ["./src/app/shared/constants.ts"],
       "@core": ["./src/app/core/index.ts"],
+      "@env": ["./src/environments/index.ts"],
       "@features": ["./src/app/features/index.ts"],
       "@shared": ["./src/app/shared/shared.module.ts"],
       "@types": ["./src/app/shared/types/index.ts"],

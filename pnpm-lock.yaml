@@ -56,6 +56,9 @@ dependencies:
   '@capacitor/preferences':
     specifier: 5.0.6
     version: 5.0.6(@capacitor/core@5.2.2)
+  '@sentry/angular-ivy':
+    specifier: ^7.61.0
+    version: 7.61.0(@angular/common@16.1.0)(@angular/core@16.1.0)(@angular/router@16.1.0)(rxjs@7.8.0)
   latinize:
     specifier: ^0.5.0
     version: 0.5.0
@@ -103,6 +106,12 @@ devDependencies:
   '@capacitor/cli':
     specifier: ^5.2.2
     version: 5.2.2
+  '@ngx-env/builder':
+    specifier: 16.1.3
+    version: 16.1.3(webpack@5.86.0)
+  '@sentry/cli':
+    specifier: ^2.20.4
+    version: 2.20.4
   '@total-typescript/ts-reset':
     specifier: ^0.4.2
     version: 0.4.2
@@ -2171,6 +2180,24 @@ packages:
     engines: {node: '>=10.0.0'}
     dev: true
 
+  /@dotenv-run/core@1.0.0:
+    resolution: {integrity: sha512-fP2yUcGn8CXWy585+GfOmKBLB/eUJZ1Y2/4SpBz0P8w//MjVuw7LHphhLHbIztVgn+VBZpXewZS0tBHfb1mLOA==}
+    dependencies:
+      chalk: 4.1.2
+      dotenv: 16.3.1
+      dotenv-expand: 10.0.0
+    dev: true
+
+  /@dotenv-run/webpack@1.0.1(webpack@5.86.0):
+    resolution: {integrity: sha512-e+3tSOVK/47I4tZ3sGXKlcuMo/QaJ79kiDGnbsjsQVaq8uH50CYEDCWvFDcmo3cgXfDmFb7L7VBtqcyJ4sKAYA==}
+    peerDependencies:
+      webpack: ^5.0.0
+    dependencies:
+      '@dotenv-run/core': 1.0.0
+      chalk: 4.1.2
+      webpack: 5.86.0
+    dev: true
+
   /@esbuild/android-arm64@0.17.19:
     resolution: {integrity: sha512-KBMWvEZooR7+kzY0BtbTQn0OAYY7CsiydT63pVEaPtVYF0hXbUaOyZog37DKxK7NF3XacBJOpYT4adIJh+avxA==}
     engines: {node: '>=12'}
@@ -3275,6 +3302,14 @@ packages:
       webpack: 5.86.0(esbuild@0.17.19)
     dev: true
 
+  /@ngx-env/builder@16.1.3(webpack@5.86.0):
+    resolution: {integrity: sha512-Us17dnTqhC/RzHmcK9i0iJd9KpyZopsSzZwPuRDBhLxhn8Qs1jxRbDEMsEtuZOLbwfzJo1TUQsOZBF6TPT/SsA==}
+    dependencies:
+      '@dotenv-run/webpack': 1.0.1(webpack@5.86.0)
+    transitivePeerDependencies:
+      - webpack
+    dev: true
+
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -3500,6 +3535,94 @@ packages:
     transitivePeerDependencies:
       - chokidar
     dev: true
+
+  /@sentry-internal/tracing@7.61.0:
+    resolution: {integrity: sha512-zTr+MXEG4SxNxif42LIgm2RQn+JRXL2NuGhRaKSD2i4lXKFqHVGlVdoWqY5UfqnnJPokiTWIj9ejR8I5HV8Ogw==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/core': 7.61.0
+      '@sentry/types': 7.61.0
+      '@sentry/utils': 7.61.0
+      tslib: 2.5.3
+    dev: false
+
+  /@sentry/angular-ivy@7.61.0(@angular/common@16.1.0)(@angular/core@16.1.0)(@angular/router@16.1.0)(rxjs@7.8.0):
+    resolution: {integrity: sha512-pOMZZWezmWPKzMtCMDWzDLZntFqeN4uqrmuxOoBjFc0hroCakfsqCfydpsuy7251ZB/0EjCA6m7VnAv9Enxfnw==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@angular/common': '>= 12.x <= 16.x'
+      '@angular/core': '>= 12.x <= 16.x'
+      '@angular/router': '>= 12.x <= 16.x'
+      rxjs: ^6.5.5 || ^7.x
+    dependencies:
+      '@angular/common': 16.1.0(@angular/core@16.1.0)(rxjs@7.8.0)
+      '@angular/core': 16.1.0(rxjs@7.8.0)(zone.js@0.13.0)
+      '@angular/router': 16.1.0(@angular/common@16.1.0)(@angular/core@16.1.0)(@angular/platform-browser@16.1.0)(rxjs@7.8.0)
+      '@sentry/browser': 7.61.0
+      '@sentry/types': 7.61.0
+      '@sentry/utils': 7.61.0
+      rxjs: 7.8.0
+      tslib: 2.5.3
+    dev: false
+
+  /@sentry/browser@7.61.0:
+    resolution: {integrity: sha512-IGEkJZRP16Oe5CkXkmhU3QdV5RugW6Vds16yJFFYsgp87NprWtRZgqzldFDYkINStfBHVdctj/Rh/ZrLf8QlkQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry-internal/tracing': 7.61.0
+      '@sentry/core': 7.61.0
+      '@sentry/replay': 7.61.0
+      '@sentry/types': 7.61.0
+      '@sentry/utils': 7.61.0
+      tslib: 2.5.3
+    dev: false
+
+  /@sentry/cli@2.20.4:
+    resolution: {integrity: sha512-mycBCKQmLdaJpSKpXc3IXrQwb5HLxrdjgJgLGbb8saFHIkXl/1ePH171j+REq4dIP1uetu0bdDgEYj6AQjkleQ==}
+    engines: {node: '>= 10'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      https-proxy-agent: 5.0.1
+      node-fetch: 2.6.12
+      progress: 2.0.3
+      proxy-from-env: 1.1.0
+      which: 2.0.2
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+    dev: true
+
+  /@sentry/core@7.61.0:
+    resolution: {integrity: sha512-zl0ZKRjIoYJQWYTd3K/U6zZfS4GDY9yGd2EH4vuYO4kfYtEp/nJ8A+tfAeDo0c9FGxZ0Q+5t5F4/SfwbgyyQzg==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.61.0
+      '@sentry/utils': 7.61.0
+      tslib: 2.5.3
+    dev: false
+
+  /@sentry/replay@7.61.0:
+    resolution: {integrity: sha512-1ugk0yZssOPkSg6uTVcysjxlBydycXiOgV0PCU7DsXCFOV1ua5YpyPZFReTz9iFTtwD0LwGFM1LW9wJeQ67Fzg==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@sentry/core': 7.61.0
+      '@sentry/types': 7.61.0
+      '@sentry/utils': 7.61.0
+    dev: false
+
+  /@sentry/types@7.61.0:
+    resolution: {integrity: sha512-/GLlIBNR35NKPE/SfWi9W10dK9hE8qTShzsuPVn5wAJxpT3Lb4+dkwmKCTLUYxdkmvRDEudkfOxgalsfQGTAWA==}
+    engines: {node: '>=8'}
+    dev: false
+
+  /@sentry/utils@7.61.0:
+    resolution: {integrity: sha512-jfj14d0XBFiCU0G6dZZ12SizATiF5Mt4stBGzkM5iS9nXFj8rh1oTT7/p+aZoYzP2JTF+sDzkNjWxyKZkcTo0Q==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.61.0
+      tslib: 2.5.3
+    dev: false
 
   /@sigstore/protobuf-specs@0.1.0:
     resolution: {integrity: sha512-a31EnjuIDSX8IXBUib3cYLDRlPMU36AWX4xS8ysLaNu4ZzUesDiPt83pgrW2X1YLMe5L2HbDyaKK5BrL4cNKaQ==}
@@ -5634,9 +5757,19 @@ packages:
       is-obj: 2.0.0
     dev: true
 
+  /dotenv-expand@10.0.0:
+    resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
+    engines: {node: '>=12'}
+    dev: true
+
   /dotenv@10.0.0:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
+    dev: true
+
+  /dotenv@16.3.1:
+    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
+    engines: {node: '>=12'}
     dev: true
 
   /duplexer@0.1.2:
@@ -9337,6 +9470,11 @@ packages:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
     dev: true
 
+  /progress@2.0.3:
+    resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
+    engines: {node: '>=0.4.0'}
+    dev: true
+
   /promise-inflight@1.0.1:
     resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
     peerDependencies:
@@ -10651,6 +10789,30 @@ packages:
       webpack: 5.86.0(esbuild@0.17.19)
     dev: true
 
+  /terser-webpack-plugin@5.3.9(webpack@5.86.0):
+    resolution: {integrity: sha512-ZuXsqE07EcggTWQjXUj+Aot/OMcD0bMKGgF63f7UxYcu5/AJF53aIpK1YoP5xR9l6s/Hy2b+t1AM0bLNPRuhwA==}
+    engines: {node: '>= 10.13.0'}
+    peerDependencies:
+      '@swc/core': '*'
+      esbuild: '*'
+      uglify-js: '*'
+      webpack: ^5.1.0
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      esbuild:
+        optional: true
+      uglify-js:
+        optional: true
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.18
+      jest-worker: 27.5.1
+      schema-utils: 3.3.0
+      serialize-javascript: 6.0.1
+      terser: 5.17.7
+      webpack: 5.86.0
+    dev: true
+
   /terser@5.17.7:
     resolution: {integrity: sha512-/bi0Zm2C6VAexlGgLlVxA0P2lru/sdLyfCVaRMfKVo9nWxbmz7f/sD8VPybPeSUJaJcwmCJis9pBIhcVcG1QcQ==}
     engines: {node: '>=10'}
@@ -11222,6 +11384,46 @@ packages:
     dependencies:
       typed-assert: 1.0.9
       webpack: 5.86.0(esbuild@0.17.19)
+    dev: true
+
+  /webpack@5.86.0:
+    resolution: {integrity: sha512-3BOvworZ8SO/D4GVP+GoRC3fVeg5MO4vzmq8TJJEkdmopxyazGDxN8ClqN12uzrZW9Tv8EED8v5VSb6Sqyi0pg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    peerDependencies:
+      webpack-cli: '*'
+    peerDependenciesMeta:
+      webpack-cli:
+        optional: true
+    dependencies:
+      '@types/eslint-scope': 3.7.4
+      '@types/estree': 1.0.1
+      '@webassemblyjs/ast': 1.11.6
+      '@webassemblyjs/wasm-edit': 1.11.6
+      '@webassemblyjs/wasm-parser': 1.11.6
+      acorn: 8.9.0
+      acorn-import-assertions: 1.9.0(acorn@8.9.0)
+      browserslist: 4.21.7
+      chrome-trace-event: 1.0.3
+      enhanced-resolve: 5.15.0
+      es-module-lexer: 1.3.0
+      eslint-scope: 5.1.1
+      events: 3.3.0
+      glob-to-regexp: 0.4.1
+      graceful-fs: 4.2.11
+      json-parse-even-better-errors: 2.3.1
+      loader-runner: 4.3.0
+      mime-types: 2.1.35
+      neo-async: 2.6.2
+      schema-utils: 3.3.0
+      tapable: 2.2.1
+      terser-webpack-plugin: 5.3.9(webpack@5.86.0)
+      watchpack: 2.4.0
+      webpack-sources: 3.2.3
+    transitivePeerDependencies:
+      - '@swc/core'
+      - esbuild
+      - uglify-js
     dev: true
 
   /webpack@5.86.0(esbuild@0.17.19):
