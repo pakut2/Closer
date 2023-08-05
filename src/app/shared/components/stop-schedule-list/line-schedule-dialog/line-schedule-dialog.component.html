@@ -1,0 +1,24 @@
+<section>
+  <div class="dialog-header">
+    <span>{{ data.lineNumber }} {{ data.destination }}</span>
+  </div>
+
+  <div class="dialog-body">
+    <mat-dialog-content>
+      <ng-container *ngIf="data.schedules.length; else noSchedules">
+        <div class="line"></div>
+
+        <ng-container *ngFor="let schedule of data.schedules">
+          <div class="schedule">
+            <div class="list-bullet"></div>
+            <span class="list-item">{{ schedule.stopName }} - {{ schedule.departsAt }}</span>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #noSchedules>
+        <p class="text">There was a schedule here. It's gone now.</p>
+      </ng-template>
+    </mat-dialog-content>
+  </div>
+</section>

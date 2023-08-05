@@ -1,17 +1,20 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { StopNotFoundError } from "@core";
+import { ScheduleNotFoundError, StopNotFoundError } from "@core";
 import { Coords } from "@types";
 import { crowDistance, normalize } from "@utilities";
-import { map, mergeMap, Observable, of, shareReplay, zip } from "rxjs";
+import { map, Observable, of, shareReplay, switchMap, zip } from "rxjs";
 
 import { ZtmConfigService } from "./config";
 import {
   GeolocalizedZtmStopMetadata,
   GeolocalizedZtmStopWithRelatedStops,
   GeolocalizedZtmStopWithSchedules,
-  URBAN_ZONE_ID,
-  ZtmSchedulesResponse,
+  ZtmEstimatedSchedulesResponse,
+  ZtmLineSchedule,
+  ZtmLineSchedulesResponse,
+  ZtmLineScheduleWithStop,
+  ZtmStop,
   ZtmStopsResponse,
   ZtmStopWithRelatedStops,
   ZtmStopWithSchedules
@@ -28,9 +31,9 @@ export class ZtmService {
 
   getStopWithSchedules(stopName: string, ordinalNumber: string): Observable<ZtmStopWithSchedules> {
     return this.getStopByName(stopName, ordinalNumber).pipe(
-      mergeMap(ztmStop =>
+      switchMap(ztmStop =>
         this.httpClient
-          .get<ZtmSchedulesResponse>(
+          .get<ZtmEstimatedSchedulesResponse>(
             this.configService.schedulesByStopIdEndpointUrl(String(ztmStop.stopId))
           )
           .pipe(
@@ -49,7 +52,7 @@ export class ZtmService {
         const normalizedStopName = normalize(stopName);
 
         const stops = stopsResponse.stops
-          .filter(stop => normalize(stop.stopName) === normalizedStopName)
+          .filter(stop => normalize(stop.stopDesc) === normalizedStopName)
           .sort(
             ({ stopCode: stopCode1 }, { stopCode: stopCode2 }) =>
               parseInt(stopCode1) - parseInt(stopCode2)
@@ -71,13 +74,9 @@ export class ZtmService {
 
   getStops(): Observable<ZtmStopsResponse> {
     if (!this.stops) {
-      this.stops = this.httpClient.get<ZtmStopsResponse>(this.configService.stopsEndpointUrl).pipe(
-        map(stopsResponse => ({
-          ...stopsResponse,
-          stops: stopsResponse.stops.filter(stop => stop.zoneId === URBAN_ZONE_ID)
-        })),
-        shareReplay()
-      );
+      this.stops = this.httpClient
+        .get<ZtmStopsResponse>(this.configService.stopsEndpointUrl)
+        .pipe(shareReplay());
     }
 
     return this.stops;
@@ -85,15 +84,15 @@ export class ZtmService {
 
   getGeolocalizedStopsWithSchedules(
     currentLocation: Coords,
-    searchRadius: number
+    searchDistance: number
   ): Observable<GeolocalizedZtmStopWithSchedules[]> {
-    return this.getStopsInRadius(currentLocation, searchRadius).pipe(
-      mergeMap(ztmStops =>
+    return this.getStopsInRadius(currentLocation, searchDistance).pipe(
+      switchMap(ztmStops =>
         ztmStops.length
           ? zip(
               ztmStops.map(ztmStop =>
                 this.httpClient
-                  .get<ZtmSchedulesResponse>(
+                  .get<ZtmEstimatedSchedulesResponse>(
                     this.configService.schedulesByStopIdEndpointUrl(String(ztmStop.stopId))
                   )
                   .pipe(
@@ -114,14 +113,14 @@ export class ZtmService {
 
   private getStopsInRadius(
     currentLocation: Coords,
-    searchRadius: number
+    searchDistance: number
   ): Observable<GeolocalizedZtmStopWithRelatedStops[]> {
     return this.getStops().pipe(
       map(({ stops: ztmStops }) => {
-        const foundStops: { [stopName: string]: GeolocalizedZtmStopWithRelatedStops } = {};
+        const foundStops: { [stopDesc: string]: GeolocalizedZtmStopWithRelatedStops } = {};
 
         for (const stop of ztmStops) {
-          if (foundStops[stop.stopName]) {
+          if (foundStops[stop.stopDesc]) {
             continue;
           }
 
@@ -130,8 +129,8 @@ export class ZtmService {
             lon: stop.stopLon
           });
 
-          if (distanceToStop <= searchRadius) {
-            foundStops[stop.stopName] = {
+          if (distanceToStop <= searchDistance) {
+            foundStops[stop.stopDesc] = {
               ...stop,
               distance: distanceToStop,
               relatedStops: [
@@ -149,33 +148,35 @@ export class ZtmService {
 
         for (const stop of ztmStops) {
           if (
-            foundStops[stop.stopName] &&
-            !foundStops[stop.stopName].relatedStops.some(
+            !foundStops[stop.stopDesc] ||
+            foundStops[stop.stopDesc]?.relatedStops.some(
               relatedStop => relatedStop.stopCode === stop.stopCode
             )
           ) {
-            const distanceToStop = crowDistance(currentLocation, {
-              lat: stop.stopLat,
-              lon: stop.stopLon
-            });
+            continue;
+          }
 
-            const stopMetadata: GeolocalizedZtmStopMetadata = {
-              stopId: stop.stopId,
-              stopCode: stop.stopCode,
-              stopLat: stop.stopLat,
-              stopLon: stop.stopLon,
-              distance: distanceToStop
+          const distanceToStop = crowDistance(currentLocation, {
+            lat: stop.stopLat,
+            lon: stop.stopLon
+          });
+
+          const stopMetadata: GeolocalizedZtmStopMetadata = {
+            stopId: stop.stopId,
+            stopCode: stop.stopCode,
+            stopLat: stop.stopLat,
+            stopLon: stop.stopLon,
+            distance: distanceToStop
+          };
+
+          if (parseInt(stop.stopCode) < parseInt(foundStops[stop.stopDesc].stopCode)) {
+            foundStops[stop.stopDesc] = {
+              ...stop,
+              distance: distanceToStop,
+              relatedStops: [...foundStops[stop.stopDesc].relatedStops, stopMetadata]
             };
-
-            if (parseInt(stop.stopCode) < parseInt(foundStops[stop.stopName].stopCode)) {
-              foundStops[stop.stopName] = {
-                ...stop,
-                distance: distanceToStop,
-                relatedStops: [...foundStops[stop.stopName].relatedStops, stopMetadata]
-              };
-            } else {
-              foundStops[stop.stopName].relatedStops.push(stopMetadata);
-            }
+          } else {
+            foundStops[stop.stopDesc].relatedStops.push(stopMetadata);
           }
         }
 
@@ -188,6 +189,74 @@ export class ZtmService {
             )
           }))
           .sort(({ distance: distance1 }, { distance: distance2 }) => distance1 - distance2);
+      })
+    );
+  }
+
+  getLineSchedule(
+    stopId: string,
+    lineNumber: string,
+    stopDepartureTime: string
+  ): Observable<ZtmLineScheduleWithStop[]> {
+    return this.httpClient
+      .get<ZtmLineSchedulesResponse>(
+        this.configService.entireScheduleByLineNumberEndpointUrl(lineNumber)
+      )
+      .pipe(
+        map(({ stopTimes: ztmLineSchedules }) => {
+          let currentStopIndex = ztmLineSchedules.findIndex(
+            schedule =>
+              String(schedule.stopId) === stopId &&
+              schedule.departureTime.endsWith(stopDepartureTime)
+          );
+
+          if (!~currentStopIndex) {
+            throw new ScheduleNotFoundError();
+          }
+
+          const lineSchedules: ZtmLineSchedule[] = [];
+          let stopSequenceNumber = ztmLineSchedules[currentStopIndex].stopSequence;
+
+          while (
+            currentStopIndex < ztmLineSchedules.length - 1 &&
+            !this.isFirstStopInSequence(stopSequenceNumber)
+          ) {
+            lineSchedules.push(ztmLineSchedules[currentStopIndex]);
+
+            currentStopIndex++;
+            stopSequenceNumber = ztmLineSchedules[currentStopIndex].stopSequence;
+          }
+
+          return lineSchedules;
+        }),
+        switchMap(ztmSchedules =>
+          ztmSchedules.length
+            ? zip(
+                ztmSchedules.map(schedule =>
+                  this.getStopById(String(schedule.stopId)).pipe(
+                    map(ztmStop => ({ stop: ztmStop, schedule }))
+                  )
+                )
+              )
+            : of([])
+        )
+      );
+  }
+
+  private isFirstStopInSequence(stopSequenceNumber: number): boolean {
+    return stopSequenceNumber === 0;
+  }
+
+  private getStopById(stopId: string): Observable<ZtmStop> {
+    return this.getStops().pipe(
+      map(stopsResponse => {
+        const stop = stopsResponse.stops.find(stop => String(stop.stopId) === stopId);
+
+        if (!stop) {
+          throw new StopNotFoundError();
+        }
+
+        return stop;
       })
     );
   }

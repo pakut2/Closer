@@ -40,3 +40,14 @@ interface StopLocation {
   coords: Coords;
   distance: number;
 }
+
+export interface EntireLineSchedule {
+  lineNumber: string;
+  destination: string;
+  schedules: MinifiedStopSchedule[];
+}
+
+export interface MinifiedStopSchedule {
+  stopName: string;
+  departsAt: string;
+}

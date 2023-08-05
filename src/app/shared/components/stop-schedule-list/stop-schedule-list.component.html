@@ -1,5 +1,5 @@
 <section>
-  <ng-container *ngIf="schedules.length; else noSchedules">
+  <ng-container *ngIf="stop.schedules.length; else noSchedules">
     <table>
       <tr>
         <th>Line</th>
@@ -7,8 +7,8 @@
         <th>Departure</th>
       </tr>
 
-      <ng-container *ngFor="let schedule of schedules">
-        <tr>
+      <ng-container *ngFor="let schedule of stop.schedules">
+        <tr (click)="onScheduleSelect(schedule)">
           <td>{{ schedule.lineNumber }}</td>
           <td>{{ schedule.destination }}</td>
           <td [class.blinker]="schedule.departsIn === '>>>'">{{ schedule.departsIn }}</td>

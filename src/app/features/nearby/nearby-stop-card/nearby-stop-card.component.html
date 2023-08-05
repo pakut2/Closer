@@ -9,8 +9,9 @@
       />
     </span>
   </div>
+
   <div class="card-body">
-    <app-stop-schedule-list [schedules]="stop.schedules" />
+    <app-stop-schedule-list [stop]="stop" />
   </div>
 
   <div class="card-footer">{{ stop.location.distance }} m</div>

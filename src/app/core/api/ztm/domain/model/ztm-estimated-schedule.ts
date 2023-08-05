@@ -1,19 +1,19 @@
 import { GeolocalizedZtmStopWithRelatedStops, ZtmStopWithRelatedStops } from "./ztm-stop";
 
-export interface ZtmStopWithSchedules extends ZtmSchedulesResponse {
+export interface ZtmStopWithSchedules extends ZtmEstimatedSchedulesResponse {
   stop: ZtmStopWithRelatedStops;
 }
 
-export interface GeolocalizedZtmStopWithSchedules extends ZtmSchedulesResponse {
+export interface GeolocalizedZtmStopWithSchedules extends ZtmEstimatedSchedulesResponse {
   stop: GeolocalizedZtmStopWithRelatedStops;
 }
 
-export interface ZtmSchedulesResponse {
+export interface ZtmEstimatedSchedulesResponse {
   lastUpdate: string;
-  delay: ZtmSchedule[];
+  delay: ZtmEstimatedSchedule[];
 }
 
-export interface ZtmSchedule {
+export interface ZtmEstimatedSchedule {
   id: string;
   delayInSeconds: number;
   estimatedTime: string;

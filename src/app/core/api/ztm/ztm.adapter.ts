@@ -1,5 +1,13 @@
 import { Injectable } from "@angular/core";
-import { Coords, GeolocalizedStop, Stop, StopNaturalKey } from "@types";
+import {
+  Coords,
+  EntireLineSchedule,
+  GeolocalizedStop,
+  MinifiedStopSchedule,
+  Schedule,
+  Stop,
+  StopNaturalKey
+} from "@types";
 import { Time } from "@utilities";
 import { DateTime } from "luxon";
 import { map, Observable, of, zip } from "rxjs";
@@ -8,6 +16,7 @@ import {
   GeolocalizedZtmStopWithSchedules,
   NIGHT_LINE_INDICATOR,
   NIGHT_LINE_PREFIX,
+  ZtmLineScheduleWithStop,
   ZtmStopWithSchedules
 } from "./domain";
 import { ZtmService } from "./ztm.service";
@@ -19,7 +28,7 @@ export class ZtmAdapter {
   getUniqueStopNames(): Observable<string[]> {
     return this.ztmService
       .getStops()
-      .pipe(map(ztmStops => [...new Set(ztmStops.stops.map(stop => stop.stopName))].sort()));
+      .pipe(map(ztmStops => [...new Set(ztmStops.stops.map(stop => stop.stopDesc))].sort()));
   }
 
   getStopsWithSchedules(stopIds: StopNaturalKey[]): Observable<Stop[]> {
@@ -44,44 +53,45 @@ export class ZtmAdapter {
 
     return {
       id: String(stop.stopId),
-      name: stop.stopName,
+      name: stop.stopDesc,
       ordinalNumber: stop.stopCode,
       relatedStops: stop.relatedStops.map(stopMetadata => ({
         id: String(stopMetadata.stopId),
         ordinalNumber: stopMetadata.stopCode
       })),
       schedules: schedules.map(schedule => ({
-        lineNumber: this.handleNightLine(String(schedule.routeId)),
+        lineNumber: this.fromZtmNightLineFormat(String(schedule.routeId)),
         destination: schedule.headsign,
-        departsIn: this.getMinuteDifference(currentIsoDate, schedule.estimatedTime)
+        departsIn: this.getMinuteDifference(currentIsoDate, schedule.estimatedTime),
+        departsAt: schedule.theoreticalTime
       }))
     };
   }
 
-  private handleNightLine(lineNumber: string): string {
+  private fromZtmNightLineFormat(lineNumber: string): string {
     return lineNumber.length > 1 && lineNumber.startsWith(NIGHT_LINE_INDICATOR)
       ? lineNumber.replace(new RegExp(`^${NIGHT_LINE_INDICATOR}`), NIGHT_LINE_PREFIX)
       : lineNumber;
   }
 
   private getMinuteDifference(currentIsoDate: string, targetTime: string): string {
-    const targetIsoDate = DateTime.fromFormat(targetTime, "HH:mm").toISO();
+    const targetIsoTime = DateTime.fromFormat(targetTime, "HH:mm").toUTC().toISOTime();
 
-    if (!targetIsoDate) {
+    if (!targetIsoTime) {
       return targetTime;
     }
 
-    const timeRemaining = this.time.minuteDifference(currentIsoDate, targetIsoDate);
+    const timeRemaining = this.time.minuteDifference(currentIsoDate, targetIsoTime);
 
     return timeRemaining > 0 ? `${timeRemaining} min` : ">>>";
   }
 
   getGeolocalizedStopsWithSchedules(
     currentLocation: Coords,
-    searchRadius: number
+    searchDistance: number
   ): Observable<GeolocalizedStop[]> {
     return this.ztmService
-      .getGeolocalizedStopsWithSchedules(currentLocation, searchRadius)
+      .getGeolocalizedStopsWithSchedules(currentLocation, searchDistance)
       .pipe(map(ztmStops => ztmStops.map(ztmStop => this.prepareGeolocalizedStop(ztmStop))));
   }
 
@@ -102,6 +112,32 @@ export class ZtmAdapter {
           distance: Math.round(stopMetadata.distance)
         }
       }))
+    };
+  }
+
+  getLineSchedule(stop: Stop, schedule: Schedule): Observable<EntireLineSchedule> {
+    const ztmLineNumber = this.toZtmNightLineFormat(schedule.lineNumber);
+    const ztmDepartureTime = `${schedule.departsAt}:00`;
+
+    return this.ztmService.getLineSchedule(stop.id, ztmLineNumber, ztmDepartureTime).pipe(
+      map(ztmLineSchedules => ({
+        lineNumber: schedule.lineNumber,
+        destination: schedule.destination,
+        schedules: ztmLineSchedules.map(ztmSchedule => this.prepareLineSchedule(ztmSchedule))
+      }))
+    );
+  }
+
+  private toZtmNightLineFormat(lineNumber: string): string {
+    return lineNumber.length > 1 && lineNumber.startsWith(NIGHT_LINE_PREFIX)
+      ? lineNumber.replace(new RegExp(`^${NIGHT_LINE_PREFIX}`), NIGHT_LINE_INDICATOR)
+      : lineNumber;
+  }
+
+  private prepareLineSchedule(ztmRouteSchedule: ZtmLineScheduleWithStop): MinifiedStopSchedule {
+    return {
+      stopName: ztmRouteSchedule.stop.stopDesc,
+      departsAt: DateTime.fromISO(ztmRouteSchedule.schedule.departureTime).toFormat("HH:mm")
     };
   }
 }

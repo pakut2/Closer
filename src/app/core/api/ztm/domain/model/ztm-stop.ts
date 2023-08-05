@@ -1,3 +1,5 @@
+import { ZtmBoolean } from "./ztm";
+
 export interface ZtmStopsResponse {
   lastUpdate: string;
   stops: ZtmStop[];
@@ -22,8 +24,6 @@ export interface ZtmStop {
   stopLat: number;
   stopLon: number;
 }
-
-type ZtmBoolean = 0 | 1;
 
 export interface ZtmStopWithRelatedStops extends ZtmStop {
   relatedStops: ZtmStopMetadata[];

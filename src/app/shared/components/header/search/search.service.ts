@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { normalize } from "@utilities";
 import { ZtmAdapter } from "@ztm";
-import { concatMap, map, Observable, startWith } from "rxjs";
+import { map, Observable, startWith, switchMap } from "rxjs";
 
 @Injectable()
 export class SearchService {
@@ -12,7 +12,7 @@ export class SearchService {
     form: FormGroup<{ stopName: FormControl<string | null> }>
   ): Observable<string[]> {
     return this.ztmAdapter.getUniqueStopNames().pipe(
-      concatMap(stopNames =>
+      switchMap(stopNames =>
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         form.get("stopName")!.valueChanges.pipe(
           startWith(""),

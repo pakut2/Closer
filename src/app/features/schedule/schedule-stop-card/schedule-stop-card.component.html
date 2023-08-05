@@ -19,8 +19,9 @@
 
       <mat-icon fontIcon="close" class="button" (click)="removeAnimationActive = true" />
     </div>
+
     <div class="card-body">
-      <app-stop-schedule-list [schedules]="stop.schedules" />
+      <app-stop-schedule-list [stop]="stop" />
     </div>
   </section>
 </div>

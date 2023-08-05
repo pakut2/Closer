@@ -1,0 +1,61 @@
+@use "common";
+@import "variables";
+
+section {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $light-color;
+
+  .dialog-header {
+    font-size: $title-size;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    font-weight: bold;
+  }
+
+  .dialog-body {
+    position: relative;
+  }
+
+  mat-dialog-content {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: $light-color;
+    font-size: $text-size;
+    font-weight: 400;
+
+    .schedule {
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .schedule:last-child {
+      margin-bottom: auto;
+    }
+
+    .list-bullet {
+      background: $accent-color;
+      z-index: $dialog-content-overlay;
+      border: 3px solid $light-color;
+      border-radius: 50%;
+      height: 1.5rem;
+      width: 1.5rem;
+      margin-right: 0.5rem;
+    }
+
+    .line {
+      background: $light-color;
+      z-index: $dialog-content;
+      width: 3px;
+      height: 100%;
+      position: absolute;
+      left: calc(0.75rem - 1.5px);
+    }
+  }
+}
