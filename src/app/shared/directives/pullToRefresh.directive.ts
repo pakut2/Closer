@@ -8,7 +8,7 @@ import { MessagingService } from "@core";
 export class PullToRefreshDirective {
   @Output() refreshProgress = new EventEmitter<number>();
 
-  private readonly refreshGestureHeightThreshold = 50;
+  private readonly refreshGestureHeightThreshold = 100;
   private initialTouch: { height: number; wasFromPageTop: boolean } | null = null;
   private shouldRefresh = false;
 

@@ -22,6 +22,7 @@ export interface Schedule {
   lineNumber: string;
   destination: string;
   departsIn: string;
+  departsAt: string;
 }
 
 interface StopMetadata {

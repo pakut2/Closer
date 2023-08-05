@@ -1,24 +1,11 @@
-import { Inject, Injectable, NgZone } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { Snackbar } from "@components";
-import { ENVIRONMENT, StopConflictError, StopNotFoundError } from "@core";
-import { Environment } from "@env";
+import { StopConflictError, StopNotFoundError } from "@core";
 import { SentryErrorHandler } from "@sentry/angular-ivy";
-import { init as sentryInit } from "@sentry/angular-ivy";
 
 @Injectable({ providedIn: "root" })
 export class GlobalErrorHandler extends SentryErrorHandler {
-  constructor(
-    @Inject(ENVIRONMENT) private readonly env: Environment,
-    private readonly zone: NgZone,
-    private readonly snackbar: Snackbar
-  ) {
-    if (env.isProduction) {
-      sentryInit({
-        dsn: env.sentryDsn,
-        release: `closer@${env.version}`
-      });
-    }
-
+  constructor(private readonly zone: NgZone, private readonly snackbar: Snackbar) {
     super();
   }
 
