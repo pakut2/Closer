@@ -1,2 +1,2 @@
-export * from "./disableRipple.directive";
-export * from "./dragTriggerDelay.directive";
+export * from "./disable-ripple.directive";
+export * from "./drag-trigger-delay.directive";

@@ -1,1 +1,1 @@
-export * from "./pullToRefresh.directive";
+export * from "./pull-to-refresh.directive";
