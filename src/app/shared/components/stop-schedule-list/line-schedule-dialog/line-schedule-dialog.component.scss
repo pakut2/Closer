@@ -48,7 +48,7 @@ section {
       position: absolute;
       z-index: $dialog-content;
       background: $light-color;
-      height: calc(100% - 1.5rem);
+      height: 100%;
       width: 3px;
       left: calc(0.75rem - 1.5px);
     }
