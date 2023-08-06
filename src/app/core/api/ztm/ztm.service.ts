@@ -10,6 +10,7 @@ import {
   GeolocalizedZtmStopMetadata,
   GeolocalizedZtmStopWithRelatedStops,
   GeolocalizedZtmStopWithSchedules,
+  URBAN_ZONE_ID,
   ZtmEstimatedSchedulesResponse,
   ZtmLineSchedule,
   ZtmLineSchedulesResponse,
@@ -80,9 +81,16 @@ export class ZtmService {
 
   getStops(): Observable<ZtmStopsResponse> {
     if (!this.stops) {
-      this.stops = this.httpClient
-        .get<ZtmStopsResponse>(this.configService.stopsEndpointUrl)
-        .pipe(shareReplay());
+      this.stops = this.httpClient.get<ZtmStopsResponse>(this.configService.stopsEndpointUrl).pipe(
+        map(ztmStops => ({
+          lastUpdate: ztmStops.lastUpdate,
+          stops: ztmStops.stops.map(ztmStop => ({
+            ...ztmStop,
+            stopDesc: ztmStop.zoneId === URBAN_ZONE_ID ? ztmStop.stopName : ztmStop.stopDesc
+          }))
+        })),
+        shareReplay()
+      );
     }
 
     return this.stops;
