@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { ScheduleNotFoundError, StopNotFoundError } from "@core";
 import { Coords } from "@types";
 import { crowDistance, normalize } from "@utilities";
-import { map, Observable, of, shareReplay, switchMap, zip } from "rxjs";
+import { map, mergeMap, Observable, of, shareReplay, switchMap, zip } from "rxjs";
 
 import { ZtmConfigService } from "./config";
 import {
@@ -38,7 +38,7 @@ export class ZtmService {
 
   getStopWithSchedules(stopName: string, ordinalNumber: string): Observable<ZtmStopWithSchedules> {
     return this.getStopByName(stopName, ordinalNumber).pipe(
-      switchMap(ztmStop =>
+      mergeMap(ztmStop =>
         this.httpClient
           .get<ZtmEstimatedSchedulesResponse>(
             this.configService.schedulesByStopIdEndpointUrl(String(ztmStop.stopId))
@@ -101,7 +101,7 @@ export class ZtmService {
     searchDistance: number
   ): Observable<GeolocalizedZtmStopWithSchedules[]> {
     return this.getStopsInRadius(currentLocation, searchDistance).pipe(
-      switchMap(ztmStops =>
+      mergeMap(ztmStops =>
         ztmStops.length
           ? zip(
               ztmStops.map(ztmStop =>
