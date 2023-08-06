@@ -119,13 +119,19 @@ export class ZtmAdapter {
     const ztmLineNumber = this.toZtmNightLineFormat(schedule.lineNumber);
     const ztmDepartureTime = `${schedule.departsAt}:00`;
 
-    return this.ztmService.getLineSchedule(stop.id, ztmLineNumber, ztmDepartureTime).pipe(
-      map(ztmLineSchedules => ({
-        lineNumber: schedule.lineNumber,
-        destination: schedule.destination,
-        schedules: ztmLineSchedules.map(ztmSchedule => this.prepareLineSchedule(ztmSchedule))
-      }))
-    );
+    return this.ztmService
+      .getLineSchedule({
+        stopId: stop.id,
+        lineNumber: ztmLineNumber,
+        stopDepartureTime: ztmDepartureTime
+      })
+      .pipe(
+        map(ztmLineSchedules => ({
+          lineNumber: schedule.lineNumber,
+          destination: schedule.destination,
+          schedules: ztmLineSchedules.map(ztmSchedule => this.prepareLineSchedule(ztmSchedule))
+        }))
+      );
   }
 
   private toZtmNightLineFormat(lineNumber: string): string {

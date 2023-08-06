@@ -9,10 +9,7 @@ section {
   color: $light-color;
 
   .dialog-header {
-    font-size: $title-size;
     margin-bottom: 1rem;
-    letter-spacing: 0.5px;
-    font-weight: bold;
   }
 
   .dialog-body {
@@ -24,8 +21,6 @@ section {
     padding: 0;
     box-sizing: border-box;
     color: $light-color;
-    font-size: $text-size;
-    font-weight: 400;
 
     .schedule {
       display: flex;
@@ -50,11 +45,11 @@ section {
     }
 
     .line {
-      background: $light-color;
-      z-index: $dialog-content;
-      width: 3px;
-      height: 100%;
       position: absolute;
+      z-index: $dialog-content;
+      background: $light-color;
+      height: calc(100% - 1.5rem);
+      width: 3px;
       left: calc(0.75rem - 1.5px);
     }
   }

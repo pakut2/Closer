@@ -1,8 +1,14 @@
 @import "animations";
 @import "variables";
 
+.title {
+  font-size: $title-size;
+  text-align: center;
+  letter-spacing: 0.5px;
+  font-weight: bold;
+}
+
 .text {
-  color: $light-color;
   font-size: $text-size;
   text-align: center;
 }

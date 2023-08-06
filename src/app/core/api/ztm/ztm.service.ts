@@ -20,6 +20,12 @@ import {
   ZtmStopWithSchedules
 } from "./domain";
 
+interface GetLineSchedule {
+  stopId: string;
+  lineNumber: string;
+  stopDepartureTime: string;
+}
+
 @Injectable({ providedIn: "root" })
 export class ZtmService {
   private stops?: Observable<ZtmStopsResponse>;
@@ -193,11 +199,11 @@ export class ZtmService {
     );
   }
 
-  getLineSchedule(
-    stopId: string,
-    lineNumber: string,
-    stopDepartureTime: string
-  ): Observable<ZtmLineScheduleWithStop[]> {
+  getLineSchedule({
+    stopId,
+    lineNumber,
+    stopDepartureTime
+  }: GetLineSchedule): Observable<ZtmLineScheduleWithStop[]> {
     return this.httpClient
       .get<ZtmLineSchedulesResponse>(
         this.configService.entireScheduleByLineNumberEndpointUrl(lineNumber)

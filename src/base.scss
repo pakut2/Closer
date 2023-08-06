@@ -55,13 +55,30 @@ $material-accent: (
 
 $material-accent-palette: mat.define-palette($material-accent);
 
+$material-typography: mat.define-typography-config(
+  $font-family: Montserrat,
+  $headline-1: mat.define-typography-level($title-size, $title-size, 600),
+  $headline-2: mat.define-typography-level($title-size, $title-size, 600),
+  $headline-3: mat.define-typography-level($title-size, $title-size, 600),
+  $headline-4: mat.define-typography-level($title-size, $title-size, 600),
+  $headline-5: mat.define-typography-level($title-size, $title-size, 600),
+  $headline-6: mat.define-typography-level($title-size, $title-size, 600),
+  $subtitle-1: mat.define-typography-level($text-size, $text-size, 500),
+  $subtitle-2: mat.define-typography-level($text-size, $text-size, 400),
+  $body-1: mat.define-typography-level($text-size, $text-size, 400),
+  $body-2: mat.define-typography-level($text-size, $text-size, 400),
+  $caption: mat.define-typography-level($text-size, $text-size, 300),
+  $button: mat.define-typography-level($text-size, $text-size, 400)
+);
+
 $material-theme: mat.define-dark-theme(
   (
     color: (
       primary: mat.define-palette($material-primary),
       accent: $material-accent-palette,
       warn: $material-accent-palette
-    )
+    ),
+    typography: $material-typography
   )
 );
 
@@ -82,7 +99,7 @@ body {
 
 body {
   font-weight: 500;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Montserrat, sans-serif;
   background: radial-gradient(#525252, #131313);
   color: $light-color;
 }
@@ -93,7 +110,7 @@ main {
 
 .snackbar {
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 
   --mdc-snackbar-container-color: #f54538;
   --mdc-snackbar-supporting-text-color: #fafafa;
