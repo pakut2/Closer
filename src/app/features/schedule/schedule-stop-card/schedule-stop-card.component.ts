@@ -66,7 +66,7 @@ export class ScheduleStopCardComponent implements OnInit {
   }
 
   onRemove(transitionEvent: TransitionEvent): void {
-    if ((transitionEvent.target as HTMLElement).classList.contains("slide-right")) {
+    if ((transitionEvent.target as HTMLElement).classList?.contains("slide-right")) {
       this.remove.emit();
     }
   }

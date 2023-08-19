@@ -11,18 +11,6 @@ type StorageKey = (typeof STORAGE_KEY)[keyof typeof STORAGE_KEY];
 
 @Injectable({ providedIn: "root" })
 export class StorageService<T extends object> {
-  async set(itemKey: StorageKey, item: T): Promise<boolean> {
-    const serializedItem = JSON.stringify(item);
-
-    if (!serializedItem) {
-      return false;
-    }
-
-    await Preferences.set({ key: itemKey, value: serializedItem });
-
-    return true;
-  }
-
   get(itemKey: StorageKey): Observable<T | null> {
     return from(
       (async () => {
@@ -35,5 +23,17 @@ export class StorageService<T extends object> {
         return JSON.parse(storageItem) as T;
       })()
     );
+  }
+
+  async set(itemKey: StorageKey, item: T): Promise<boolean> {
+    const serializedItem = JSON.stringify(item);
+
+    if (!serializedItem) {
+      return false;
+    }
+
+    await Preferences.set({ key: itemKey, value: serializedItem });
+
+    return true;
   }
 }

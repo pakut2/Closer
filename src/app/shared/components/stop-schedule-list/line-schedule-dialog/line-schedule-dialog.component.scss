@@ -36,7 +36,7 @@ section {
 
     .list-bullet {
       background: $accent-color;
-      z-index: $dialog-content-overlay;
+      z-index: $dialog-content-overlay-z-index;
       border: 3px solid $light-color;
       border-radius: 50%;
       height: 1.5rem;
@@ -46,7 +46,7 @@ section {
 
     .line {
       position: absolute;
-      z-index: $dialog-content;
+      z-index: $dialog-content-z-index;
       background: $light-color;
       height: 100%;
       width: 3px;

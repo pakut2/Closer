@@ -9,8 +9,8 @@ $text-size: 0.8rem;
 $header-height: 8vh;
 $footer-height: 6vh;
 
-$overlay-content-z-index: 1;
+$overlay-z-index: 1;
 $marginal-z-index: 2;
 $marginal-content-z-index: 3;
-$dialog-content: 4;
-$dialog-content-overlay: 5;
+$dialog-content-z-index: 4;
+$dialog-content-overlay-z-index: 5;
