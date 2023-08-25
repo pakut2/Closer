@@ -1,7 +1,13 @@
 import { DestroyRef, Inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { DEFAULT_SEARCH_DISTANCE, EVENT_NAME } from "@constants";
-import { MessagingService, StopNotFoundError, STORAGE_KEY, StorageService } from "@core";
+import {
+  CURRENT_LOCATION,
+  MessagingService,
+  StopNotFoundError,
+  STORAGE_KEY,
+  StorageService
+} from "@core";
 import { Coords, GeolocalizedStop } from "@types";
 import { Time } from "@utilities";
 import { ZtmAdapter } from "@ztm";
@@ -14,7 +20,7 @@ export class NearbyService {
   private searchDistance?: number;
 
   constructor(
-    @Inject("CURRENT_LOCATION") private readonly currentLocation: Observable<Coords>,
+    @Inject(CURRENT_LOCATION) private readonly currentLocation: Observable<Coords>,
     private readonly ztmAdapter: ZtmAdapter,
     private readonly time: Time,
     private readonly messagingService: MessagingService,

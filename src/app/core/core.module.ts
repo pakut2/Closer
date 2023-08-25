@@ -4,14 +4,13 @@ import { ErrorHandler, NgModule } from "@angular/core";
 
 import { GlobalErrorHandler } from "./error";
 import { HttpLoadingInterceptor } from "./interceptors";
-import { GeolocationService, HapticService, MessagingService, StorageService } from "./services";
+import { HapticService, MessagingService, StorageService } from "./services";
 
 @NgModule({
   imports: [CommonModule],
   providers: [
     MessagingService,
     StorageService,
-    GeolocationService,
     HapticService,
     {
       provide: ErrorHandler,
