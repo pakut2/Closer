@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, Inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SCHEDULE_PROVIDER_NAME } from "@constants";
 import { NotificationService, PushNotificationError, STORAGE_KEY, StorageService } from "@core";
 
@@ -37,7 +37,8 @@ export class CreateDepartureReminderDialogComponent {
     private readonly formBuilder: FormBuilder,
     private readonly storageService: StorageService<{ deviceToken: string }>,
     private readonly destroyRef: DestroyRef,
-    private readonly notificationService: NotificationService
+    private readonly notificationService: NotificationService,
+    private readonly dialogRef: MatDialogRef<CreateDepartureReminderDialogComponent>
   ) {}
 
   createReminder(reminderData: ReminderFormValue): void {
@@ -59,7 +60,7 @@ export class CreateDepartureReminderDialogComponent {
             deviceToken: storageDeviceToken.deviceToken
           })
           .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe();
+          .subscribe(() => this.dialogRef.close());
       });
   }
 }
