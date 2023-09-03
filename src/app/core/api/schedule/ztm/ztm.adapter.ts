@@ -146,4 +146,19 @@ export class ZtmAdapter {
       departsAt: DateTime.fromISO(ztmRouteSchedule.schedule.departureTime).toFormat("HH:mm")
     };
   }
+
+  getLineNumbersForStop(stop: Stop): Observable<string[]> {
+    return this.ztmService.getLineNumbersForStop(stop.id).pipe(
+      map(lineNumbers => {
+        if (!lineNumbers.length) {
+          return [...new Set(stop.schedules.map(schedule => schedule.lineNumber))].sort(
+            (lineNumber1: string, lineNumber2: string) =>
+              parseInt(lineNumber1) - parseInt(lineNumber2)
+          );
+        }
+
+        return lineNumbers;
+      })
+    );
+  }
 }

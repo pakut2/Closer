@@ -29,7 +29,7 @@
       "@shared": ["./src/app/shared/shared.module.ts"],
       "@types": ["./src/app/shared/types/index.ts"],
       "@utilities": ["./src/app/shared/utilities/index.ts"],
-      "@ztm": ["./src/app/core/api/ztm/index.ts"]
+      "@ztm": ["./src/app/core/api/schedule/ztm/index.ts"]
     }
   },
   "angularCompilerOptions": {

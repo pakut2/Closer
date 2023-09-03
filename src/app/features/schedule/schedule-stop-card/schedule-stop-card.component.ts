@@ -11,10 +11,13 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatRipple } from "@angular/material/core";
+import { MatDialog } from "@angular/material/dialog";
+import { CreateDepartureReminderDialogComponent } from "@components";
 import { EVENT_NAME, STOP_CARD_DRAG_DELAY } from "@constants";
 import { HapticService, MessagingService } from "@core";
 import { Stop } from "@types";
 import { Scroll } from "@utilities";
+import { ZtmAdapter } from "@ztm";
 import { filter } from "rxjs";
 
 @Component({
@@ -39,7 +42,9 @@ export class ScheduleStopCardComponent implements OnInit {
     private readonly scroll: Scroll,
     private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef,
-    private readonly hapticService: HapticService
+    private readonly hapticService: HapticService,
+    private readonly ztmAdapter: ZtmAdapter,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +64,22 @@ export class ScheduleStopCardComponent implements OnInit {
 
   onDragStart(): void {
     this.hapticService.lightVibration();
+  }
+
+  onStopNameClick() {
+    this.ztmAdapter
+      .getLineNumbersForStop(this.stop)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(stopLineNumbers =>
+        this.dialog.open(CreateDepartureReminderDialogComponent, {
+          data: {
+            stopId: this.stop.id,
+            stopName: this.stop.name,
+            stopLineNumbers: stopLineNumbers
+          },
+          autoFocus: false
+        })
+      );
   }
 
   onStopChange(ordinalNumber: string): void {

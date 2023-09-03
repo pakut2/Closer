@@ -8,7 +8,7 @@ export class Scroll {
   private readonly footerOffset = document.getElementsByTagName("footer")[0].offsetTop;
 
   verticalScrollToElement<T extends HTMLElement>(element: ElementRef<T>): void {
-    if (this.isElementInVerticalViewport(element)) {
+    if (this.elementInVerticalViewport(element)) {
       return;
     }
 
@@ -19,7 +19,7 @@ export class Scroll {
     });
   }
 
-  private isElementInVerticalViewport<T extends HTMLElement>(element: ElementRef<T>): boolean {
+  private elementInVerticalViewport<T extends HTMLElement>(element: ElementRef<T>): boolean {
     const elementDimensions = element.nativeElement.getBoundingClientRect();
 
     return (

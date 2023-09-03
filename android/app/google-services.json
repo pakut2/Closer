@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "631545008706",
+    "project_id": "mandarin-af7e7",
+    "storage_bucket": "mandarin-af7e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631545008706:android:932bf71156523bbcb253db",
+        "android_client_info": {
+          "package_name": "pakut2.loseyourip.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631545008706-vp05glaf2ojac8hf4s7ts3cvcci0p7hp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBE9jcvbXYOAthR_X3dTelcxr7Wd3vyFwo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631545008706-vp05glaf2ojac8hf4s7ts3cvcci0p7hp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,16 +1,15 @@
 import { Injectable } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
 import { normalize } from "@utilities";
 import { ZtmAdapter } from "@ztm";
 import { concatMap, map, Observable, startWith } from "rxjs";
+
+import { StopSearchForm } from "./search.component";
 
 @Injectable()
 export class SearchService {
   constructor(private readonly ztmAdapter: ZtmAdapter) {}
 
-  getAutocompleteStopNames(
-    form: FormGroup<{ stopName: FormControl<string | null> }>
-  ): Observable<string[]> {
+  getAutocompleteStopNames(form: StopSearchForm): Observable<string[]> {
     return this.ztmAdapter.getUniqueStopNames().pipe(
       concatMap(stopNames =>
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

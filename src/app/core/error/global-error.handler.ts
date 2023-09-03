@@ -1,6 +1,11 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Snackbar } from "@components";
-import { ScheduleNotFoundError, StopConflictError, StopNotFoundError } from "@core";
+import {
+  PushNotificationError,
+  ScheduleNotFoundError,
+  StopConflictError,
+  StopNotFoundError
+} from "@core";
 import { SentryErrorHandler } from "@sentry/angular-ivy";
 
 @Injectable({ providedIn: "root" })
@@ -27,8 +32,13 @@ export class GlobalErrorHandler extends SentryErrorHandler {
 
   private isSelfThrownError(
     error: unknown
-  ): error is ScheduleNotFoundError | StopConflictError | StopNotFoundError {
+  ): error is
+    | PushNotificationError
+    | ScheduleNotFoundError
+    | StopConflictError
+    | StopNotFoundError {
     return (
+      error instanceof PushNotificationError ||
       error instanceof ScheduleNotFoundError ||
       error instanceof StopConflictError ||
       error instanceof StopNotFoundError

@@ -1,3 +1,4 @@
+export * from "./create-departure-reminder-dialog/create-departure-reminder-dialog.component";
 export * from "./footer/footer.component";
 export * from "./header/header.component";
 export * from "./header/search/search.component";

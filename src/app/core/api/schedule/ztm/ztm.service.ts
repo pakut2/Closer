@@ -10,6 +10,7 @@ import {
   GeolocalizedZtmStopMetadata,
   GeolocalizedZtmStopWithRelatedStops,
   GeolocalizedZtmStopWithSchedules,
+  StopWithLineNumbers,
   URBAN_ZONE_ID,
   ZtmEstimatedSchedulesResponse,
   ZtmLineSchedule,
@@ -273,5 +274,15 @@ export class ZtmService {
         return stop;
       })
     );
+  }
+
+  getLineNumbersForStop(stopId: string): Observable<string[]> {
+    try {
+      return this.httpClient
+        .get<StopWithLineNumbers>(this.configService.stopWithLineNumbersEndpointUrl(stopId))
+        .pipe(map(stopWithLineNumbers => stopWithLineNumbers.lineNumbers));
+    } catch (err) {
+      return of([]);
+    }
   }
 }

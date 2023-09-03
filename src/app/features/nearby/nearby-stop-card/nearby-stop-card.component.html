@@ -1,7 +1,7 @@
 <section>
   <div class="card-header">
     <span>
-      {{ stop.name }}
+      <span tabindex="1" (click)="onStopNameClick()">{{ stop.name }} </span>
       <app-labeled-menu
         [label]="stop.ordinalNumber"
         [menuItems]="relatedStopOrdinalNumbers"

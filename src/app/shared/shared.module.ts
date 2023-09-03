@@ -2,16 +2,20 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatSelectModule } from "@angular/material/select";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { Scroll, Time } from "@utilities";
 import { ZtmModule } from "@ztm";
 
 import {
+  CreateDepartureReminderDialogComponent,
   FooterComponent,
   HeaderComponent,
   LabeledMenuComponent,
@@ -30,7 +34,8 @@ import { PullToRefreshDirective } from "./directives";
     StopScheduleListComponent,
     LabeledMenuComponent,
     PullToRefreshDirective,
-    LineScheduleDialogComponent
+    LineScheduleDialogComponent,
+    CreateDepartureReminderDialogComponent
   ],
   exports: [
     HeaderComponent,
@@ -42,10 +47,13 @@ import { PullToRefreshDirective } from "./directives";
   imports: [
     CommonModule,
     MatAutocompleteModule,
+    MatButtonModule,
     MatDialogModule,
+    MatFormFieldModule,
     MatIconModule,
     MatMenuModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     MatSnackBarModule,
     ReactiveFormsModule,
     ZtmModule,

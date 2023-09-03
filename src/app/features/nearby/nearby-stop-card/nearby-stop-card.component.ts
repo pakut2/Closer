@@ -9,10 +9,13 @@ import {
   Output
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatDialog } from "@angular/material/dialog";
+import { CreateDepartureReminderDialogComponent } from "@components";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
 import { GeolocalizedStop } from "@types";
 import { Scroll } from "@utilities";
+import { ZtmAdapter } from "@ztm";
 import { filter } from "rxjs";
 
 @Component({
@@ -32,7 +35,9 @@ export class NearbyStopCardComponent implements OnInit {
     private readonly element: ElementRef,
     private readonly scroll: Scroll,
     private readonly messagingService: MessagingService,
-    private readonly destroyRef: DestroyRef
+    private readonly destroyRef: DestroyRef,
+    private readonly ztmAdapter: ZtmAdapter,
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +53,22 @@ export class NearbyStopCardComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe(() => this.scroll.verticalScrollToElement(this.element));
+  }
+
+  onStopNameClick() {
+    this.ztmAdapter
+      .getLineNumbersForStop(this.stop)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(stopLineNumbers =>
+        this.dialog.open(CreateDepartureReminderDialogComponent, {
+          data: {
+            stopId: this.stop.id,
+            stopName: this.stop.name,
+            stopLineNumbers: stopLineNumbers
+          },
+          autoFocus: false
+        })
+      );
   }
 
   onStopChange(ordinalNumber: string): void {

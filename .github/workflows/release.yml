@@ -6,6 +6,7 @@ on:
 
 env:
   NG_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  NG_APP_API_URL: ${{ secrets.API_URL }}
   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   HUSKY: 0
 

@@ -9,8 +9,8 @@ export default {
     cleartext: true
   },
   plugins: {
-    CapacitorHttp: {
-      enabled: true
+    PushNotifications: {
+      presentationOptions: ["sound", "alert"]
     }
   }
 } satisfies CapacitorConfig;

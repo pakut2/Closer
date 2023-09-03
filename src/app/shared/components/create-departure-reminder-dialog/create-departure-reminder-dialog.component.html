@@ -1,0 +1,49 @@
+<section>
+  <div class="title">
+    <span>{{ data.stopName }}</span>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="createReminderForm" (ngSubmit)="createReminder(createReminderForm.value)">
+      <div class="form-input">
+        <mat-form-field>
+          <mat-label>Line Number</mat-label>
+          <mat-select
+            #lineNumberSelect
+            formControlName="lineNumber"
+            [hideSingleSelectionIndicator]="true"
+            (selectionChange)="lineNumberSelect.close()"
+          >
+            <ng-container *ngFor="let lineNumber of data.stopLineNumbers">
+              <mat-option [value]="lineNumber">{{ lineNumber }}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Reminder Time</mat-label>
+          <mat-select
+            #reminderTimeSelect
+            formControlName="reminderTime"
+            [hideSingleSelectionIndicator]="true"
+            (selectionChange)="reminderTimeSelect.close()"
+          >
+            <ng-container *ngFor="let reminderTime of reminderTimes">
+              <mat-option [value]="reminderTime">{{ reminderTime }} min</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <button
+        mat-flat-button
+        color="accent"
+        type="submit"
+        class="button"
+        [disabled]="!createReminderForm.valid"
+      >
+        Create Reminder
+      </button>
+    </form>
+  </mat-dialog-content>
+</section>

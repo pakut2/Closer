@@ -4,7 +4,8 @@ import { from, Observable } from "rxjs";
 
 export const STORAGE_KEY = {
   STOPS: "stops",
-  SEARCH_DISTANCE: "distance"
+  SEARCH_DISTANCE: "distance",
+  DEVICE_TOKEN: "deviceToken"
 } as const;
 
 type StorageKey = (typeof STORAGE_KEY)[keyof typeof STORAGE_KEY];

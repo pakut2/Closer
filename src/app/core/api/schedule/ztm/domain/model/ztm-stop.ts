@@ -44,3 +44,8 @@ export interface GeolocalizedZtmStopMetadata extends ZtmStopMetadata {
   stopLon: number;
   distance: number;
 }
+
+export interface StopWithLineNumbers {
+  stopId: string;
+  lineNumbers: string[];
+}

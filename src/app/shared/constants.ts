@@ -16,3 +16,7 @@ export const SEARCH_DISTANCE = [DEFAULT_SEARCH_DISTANCE, 1000, 2500, 5000] as co
 export const MILLISECONDS_IN_SECOND = 1000;
 
 export const STOP_CARD_DRAG_DELAY = 500;
+
+export const SCHEDULE_PROVIDER_NAME = {
+  ZTM: "ztm"
+} as const;
