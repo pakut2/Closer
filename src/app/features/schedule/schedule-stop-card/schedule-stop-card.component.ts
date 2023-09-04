@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatRipple } from "@angular/material/core";
 import { MatDialog } from "@angular/material/dialog";
-import { CreateDepartureReminderDialogComponent } from "@components";
+import { CreateDepartureReminderDialogComponent, CreateReminder } from "@components";
 import { EVENT_NAME, STOP_CARD_DRAG_DELAY } from "@constants";
 import { HapticService, MessagingService } from "@core";
 import { Stop } from "@types";
@@ -75,8 +75,9 @@ export class ScheduleStopCardComponent implements OnInit {
           data: {
             stopId: this.stop.id,
             stopName: this.stop.name,
+            stopOrdinalNumber: this.stop.ordinalNumber,
             stopLineNumbers: stopLineNumbers
-          },
+          } satisfies CreateReminder,
           autoFocus: false
         })
       );

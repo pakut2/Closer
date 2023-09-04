@@ -10,7 +10,7 @@ import {
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatDialog } from "@angular/material/dialog";
-import { CreateDepartureReminderDialogComponent } from "@components";
+import { CreateDepartureReminderDialogComponent, CreateReminder } from "@components";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
 import { GeolocalizedStop } from "@types";
@@ -64,8 +64,9 @@ export class NearbyStopCardComponent implements OnInit {
           data: {
             stopId: this.stop.id,
             stopName: this.stop.name,
+            stopOrdinalNumber: this.stop.ordinalNumber,
             stopLineNumbers: stopLineNumbers
-          },
+          } satisfies CreateReminder,
           autoFocus: false
         })
       );

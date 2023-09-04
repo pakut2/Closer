@@ -5,9 +5,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SCHEDULE_PROVIDER_NAME } from "@constants";
 import { NotificationService, PushNotificationError, STORAGE_KEY, StorageService } from "@core";
 
-interface CreateReminder {
+export interface CreateReminder {
   stopId: string;
   stopName: string;
+  stopOrdinalNumber: string;
   stopLineNumbers: string[];
 }
 
