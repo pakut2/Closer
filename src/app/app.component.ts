@@ -33,6 +33,8 @@ export class AppComponent implements OnInit {
         wasAppActive = isActive;
       });
 
+      PushNotifications.removeAllDeliveredNotifications();
+
       PushNotifications.requestPermissions().then(({ receive }) => {
         if (receive === "granted") {
           PushNotifications.register();

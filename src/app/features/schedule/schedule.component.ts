@@ -29,7 +29,7 @@ export class ScheduleComponent implements OnInit {
   stops$!: Observable<Stop[]>;
 
   constructor(
-    readonly scheduleService: ScheduleService,
+    private readonly scheduleService: ScheduleService,
     private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef,
     private readonly scroll: Scroll

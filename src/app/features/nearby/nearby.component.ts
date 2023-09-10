@@ -17,7 +17,7 @@ export class NearbyComponent implements OnInit {
   stops$!: Observable<GeolocalizedStop[]>;
 
   constructor(
-    readonly nearbyService: NearbyService,
+    private readonly nearbyService: NearbyService,
     private readonly messagingService: MessagingService,
     private readonly destroyRef: DestroyRef
   ) {}
