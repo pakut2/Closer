@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { ScheduleNotFoundError, StopNotFoundError } from "@core";
 import { Coords } from "@types";
 import { crowDistance, normalize } from "@utilities";
-import { map, mergeMap, Observable, of, shareReplay, switchMap, zip } from "rxjs";
+import { catchError, map, mergeMap, Observable, of, shareReplay, switchMap, zip } from "rxjs";
 
 import { ZtmConfigService } from "./config";
 import {
@@ -277,12 +277,11 @@ export class ZtmService {
   }
 
   getLineNumbersForStop(stopId: string): Observable<string[]> {
-    try {
-      return this.httpClient
-        .get<StopWithLineNumbers>(this.configService.stopWithLineNumbersEndpointUrl(stopId))
-        .pipe(map(stopWithLineNumbers => stopWithLineNumbers.lineNumbers));
-    } catch (err) {
-      return of([]);
-    }
+    return this.httpClient
+      .get<StopWithLineNumbers>(this.configService.stopWithLineNumbersEndpointUrl(stopId))
+      .pipe(
+        map(stopWithLineNumbers => stopWithLineNumbers.lineNumbers),
+        catchError(() => of([]))
+      );
   }
 }

@@ -20,8 +20,8 @@ import { ScheduleService } from "./schedule.service";
   selector: "app-schedule",
   templateUrl: "./schedule.component.html",
   styleUrls: ["./schedule.component.scss"],
-  providers: [ScheduleService],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ScheduleService]
 })
 export class ScheduleComponent implements OnInit {
   @ViewChild("bottom") pageBottom!: ElementRef<HTMLDivElement>;
@@ -59,8 +59,8 @@ export class ScheduleComponent implements OnInit {
     return stop.id;
   }
 
-  onScheduleUpdate(ordinalNumber: string, stop: Stop): void {
-    this.scheduleService.changeStopSchedule(ordinalNumber, stop);
+  onScheduleUpdate(newOrdinalNumber: string, stop: Stop): void {
+    this.scheduleService.changeStopSchedule(newOrdinalNumber, stop);
   }
 
   onStopRemove(stopName: string): void {

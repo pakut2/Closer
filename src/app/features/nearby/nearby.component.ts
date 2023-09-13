@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { EVENT_NAME } from "@constants";
 import { MessagingService } from "@core";
@@ -11,6 +11,7 @@ import { NearbyService } from "./nearby.service";
   selector: "app-nearby",
   templateUrl: "./nearby.component.html",
   styleUrls: ["./nearby.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [NearbyService]
 })
 export class NearbyComponent implements OnInit {
@@ -41,7 +42,7 @@ export class NearbyComponent implements OnInit {
     return stop.id;
   }
 
-  onScheduleUpdate(ordinalNumber: string, stop: GeolocalizedStop): void {
-    this.nearbyService.changeStopSchedule(ordinalNumber, stop);
+  onScheduleUpdate(newOrdinalNumber: string, stop: GeolocalizedStop): void {
+    this.nearbyService.changeStopSchedule(newOrdinalNumber, stop);
   }
 }

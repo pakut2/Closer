@@ -127,10 +127,10 @@ export class NearbyService {
     this.initGeolocalizedStops();
   }
 
-  changeStopSchedule(ordinalNumber: string, existingStop: GeolocalizedStop): void {
+  changeStopSchedule(newOrdinalNumber: string, existingStop: GeolocalizedStop): void {
     const currentStops = this.stops;
 
-    if (existingStop.ordinalNumber === ordinalNumber) {
+    if (existingStop.ordinalNumber === newOrdinalNumber) {
       return;
     }
 
@@ -139,7 +139,7 @@ export class NearbyService {
     }
 
     this.ztmAdapter
-      .getStopWithSchedules({ name: existingStop.name, ordinalNumber })
+      .getStopWithSchedules({ name: existingStop.name, ordinalNumber: newOrdinalNumber })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(updatedStop => {
         this.stops = currentStops.map(stop => {
