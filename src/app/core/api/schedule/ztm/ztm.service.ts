@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { ScheduleNotFoundError, StopNotFoundError } from "@core";
 import { Coords } from "@types";
 import { crowDistance, normalize } from "@utilities";
+import { DateTime } from "luxon";
 import { catchError, map, mergeMap, Observable, of, shareReplay, switchMap, zip } from "rxjs";
 
 import { ZtmConfigService } from "./config";
@@ -25,7 +26,7 @@ import {
 interface GetLineSchedule {
   stopId: string;
   lineNumber: string;
-  stopDepartureTime: string;
+  stopDepartureIsoDate: string;
 }
 
 @Injectable({ providedIn: "root" })
@@ -211,7 +212,7 @@ export class ZtmService {
   getLineSchedule({
     stopId,
     lineNumber,
-    stopDepartureTime
+    stopDepartureIsoDate
   }: GetLineSchedule): Observable<ZtmLineScheduleWithStop[]> {
     return this.httpClient
       .get<ZtmLineSchedulesResponse>(
@@ -219,6 +220,14 @@ export class ZtmService {
       )
       .pipe(
         map(({ stopTimes: ztmLineSchedules }) => {
+          const stopDepartureTime = DateTime.fromISO(stopDepartureIsoDate)
+            .toUTC()
+            .toISOTime({ includePrefix: true, suppressMilliseconds: true, includeOffset: false });
+
+          if (!stopDepartureTime) {
+            throw new ScheduleNotFoundError();
+          }
+
           let currentStopIndex = ztmLineSchedules.findIndex(
             schedule =>
               String(schedule.stopId) === stopId &&
