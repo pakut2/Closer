@@ -10,7 +10,7 @@ export interface GeolocalizedZtmStopWithSchedules extends ZtmEstimatedSchedulesR
 
 export interface ZtmEstimatedSchedulesResponse {
   lastUpdate: string;
-  delay: ZtmEstimatedSchedule[];
+  departures: ZtmEstimatedSchedule[];
 }
 
 export interface ZtmEstimatedSchedule {

@@ -48,7 +48,7 @@ export class ZtmAdapter {
   }
 
   private prepareStop(ztmSchedule: ZtmStopWithSchedules): Stop {
-    const { stop, delay: schedules } = ztmSchedule;
+    const { stop, departures: schedules } = ztmSchedule;
     const currentIsoDate = new Date().toISOString();
 
     return {
@@ -74,14 +74,8 @@ export class ZtmAdapter {
       : lineNumber;
   }
 
-  private getMinuteDifference(currentIsoDate: string, targetTime: string): string {
-    const targetIsoTime = DateTime.fromFormat(targetTime, "HH:mm").toUTC().toISOTime();
-
-    if (!targetIsoTime) {
-      return targetTime;
-    }
-
-    const timeRemaining = this.time.minuteDifference(currentIsoDate, targetIsoTime);
+  private getMinuteDifference(currentIsoDate: string, targetIsoDate: string): string {
+    const timeRemaining = this.time.minuteDifference(currentIsoDate, targetIsoDate);
 
     return timeRemaining > 0 ? `${timeRemaining} min` : ">>>";
   }
@@ -117,13 +111,12 @@ export class ZtmAdapter {
 
   getLineSchedule(stop: Stop, schedule: Schedule): Observable<EntireLineSchedule> {
     const ztmLineNumber = this.toZtmNightLineFormat(schedule.lineNumber);
-    const ztmDepartureTime = `${schedule.departsAt}:00`;
 
     return this.ztmService
       .getLineSchedule({
         stopId: stop.id,
         lineNumber: ztmLineNumber,
-        stopDepartureTime: ztmDepartureTime
+        stopDepartureIsoDate: schedule.departsAt
       })
       .pipe(
         map(ztmLineSchedules => ({

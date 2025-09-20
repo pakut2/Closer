@@ -9,7 +9,7 @@ export class ZtmConfigService {
   }
 
   schedulesByStopIdEndpointUrl(stopId: string): string {
-    return `https://ckan2.multimediagdansk.pl/delays?stopId=${stopId}`;
+    return `https://ckan2.multimediagdansk.pl/departures?stopId=${stopId}`;
   }
 
   entireScheduleByLineNumberEndpointUrl(lineNumber: string): string {
