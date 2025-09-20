@@ -34,7 +34,7 @@ jobs:
           node-version: 18.x
 
       - name: Install pnpm
-        run: npm i -g pnpm
+        run: npm i -g pnpm@8
 
       - name: Install Dependencies
         run: pnpm i
